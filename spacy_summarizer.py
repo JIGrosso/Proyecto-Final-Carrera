@@ -8,6 +8,7 @@ import spacy
 import pytextrank
 from spacy.lang.es import Spanish
 
+
 def replace_semicolon(text, threshold=10):
     '''
     Get rid of semicolons.
@@ -30,6 +31,7 @@ def replace_semicolon(text, threshold=10):
             new_text += ", " + subset
 
     return new_text
+
 
 def clean_text(text):
     """
@@ -98,51 +100,52 @@ def text_preprocessing(text_input):
 
     return text_input
 
-# MAIN
 
-nlp = spacy.load("es_core_news_lg")
-nlp_sentencizer = Spanish()
+# SUMMARIZATION
+if __name__ == "__main__":
 
-nlp.add_pipe("textrank")
-nlp_sentencizer.add_pipe("sentencizer")
+    nlp = spacy.load("es_core_news_lg")
+    nlp_sentencizer = Spanish()
 
-# Expresiones regulares
+    nlp.add_pipe("textrank")
+    nlp_sentencizer.add_pipe("sentencizer")
 
-USC_re = re.compile('[Uu]\.*[Ss]\.*[Cc]\.]+')
-PAREN_re = re.compile('\([^(]+\ [^\(]+\)')
-BAD_PUNCT_RE = re.compile(r'([%s])' % re.escape('"#%&\*\+/<=>@[\]^{|}~_'), re.UNICODE)
-BULLET_RE = re.compile('\n[\ \t]*`*\([a-zA-Z0-9]*\)')
-DASH_RE = re.compile('--+')
-WHITESPACE_RE = re.compile('\s+')
-EMPTY_SENT_RE = re.compile('[,\.]\ *[\.,]')
-FIX_START_RE = re.compile('^[^A-Za-z]*')
-FIX_PERIOD = re.compile('\.([A-Za-z])')
-SECTION_HEADER_RE = re.compile('SECTION [0-9]{1,2}\.|\nSEC\.* [0-9]{1,2}\.|Sec\.* [0-9]{1,2}\.')
+    # Expresiones regulares
 
-dataset = pd.read_json('./dataset/dataset-spa-test3.json')
+    USC_re = re.compile('[Uu]\.*[Ss]\.*[Cc]\.]+')
+    PAREN_re = re.compile('\([^(]+\ [^\(]+\)')
+    BAD_PUNCT_RE = re.compile(r'([%s])' % re.escape('"#%&\*\+/<=>@[\]^{|}~_'), re.UNICODE)
+    BULLET_RE = re.compile('\n[\ \t]*`*\([a-zA-Z0-9]*\)')
+    DASH_RE = re.compile('--+')
+    WHITESPACE_RE = re.compile('\s+')
+    EMPTY_SENT_RE = re.compile('[,\.]\ *[\.,]')
+    FIX_START_RE = re.compile('^[^A-Za-z]*')
+    FIX_PERIOD = re.compile('\.([A-Za-z])')
+    SECTION_HEADER_RE = re.compile('SECTION [0-9]{1,2}\.|\nSEC\.* [0-9]{1,2}\.|Sec\.* [0-9]{1,2}\.')
 
-targets = []
+    dataset = pd.read_json('./dataset/dataset-spa-test3.json')
 
-# Auxiliares
-index = dataset.index
-lenght = len(index)
-print("Cantidad de documentos legales: " + str(lenght))
+    targets = []
 
-data = {}
+    # Auxiliares
+    index = dataset.index
+    lenght = len(index)
+    print("Cantidad de documentos legales: " + str(lenght))
 
-for x in range(lenght):
-  aux_line = dataset.at[x, 'lines']
-  print('FALLO: ' + aux_line['bill_id'] + '\n' + aux_line['text'] + '\n')
-  data['fallo '+ aux_line['bill_id']] = aux_line['text']
-  print('SUMARIO: ' + aux_line['summary'] + '\n')
-  data['sumario ' + aux_line['bill_id']] = aux_line['summary']
-  #Sentencizer
-  aux_doc = nlp_sentencizer(aux_line['summary'])
-  targets.append(aux_doc)
-  text = aux_line['text']
+    data = {}
 
-print('----------------- \n')
-print(text)
+    for x in range(lenght):
+        aux_line = dataset.at[x, 'lines']
+        # print('FALLO: ' + aux_line['bill_id'] + '\n' + aux_line['text'] + '\n')
+        data['fallo ' + aux_line['bill_id']] = aux_line['text']
+        # print('SUMARIO: ' + aux_line['summary'] + '\n')
+        data['sumario ' + aux_line['bill_id']] = aux_line['summary']
+        # Sentencizer
+        aux_doc = nlp_sentencizer(aux_line['summary'])
+        targets.append(aux_doc)
+        text = aux_line['text']
 
-with open('data.txt', 'w') as outfile:
-    json.dump(data, outfile, indent=4)
+    print("Sumarios generados con éxito!")
+
+    with open('./output_spacy_summarizer/summaries.json', 'w') as outfile:
+        json.dump(data, outfile, indent=4)
