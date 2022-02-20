@@ -109,6 +109,7 @@ def clean_text(text):
 
 # LIMPIEZA DE TEXTO
 def text_preprocessing(text_input):
+    # TODO Verificar si no afecta al replace(art., articulo)
     text_input = replace_semicolon(text_input, 10)
 
     text_input = clean_text(text_input)
