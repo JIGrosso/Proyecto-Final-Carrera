@@ -34,47 +34,60 @@ def replace_semicolon(text, threshold=10):
 
 
 def clean_text(text):
-    """
-    Borrowed from the FNDS text processing with additional logic added in.
-    Note: we do not take care of token breaking - assume SPACY's tokenizer
-    will handle this for us.
-    """
-
-    # Indicate section headers, we need them for features
-    text = SECTION_HEADER_RE.sub('SECTION-HEADER', text)
+    # TODO Reescribir o eliminar
+    # text = SECTION_HEADER_RE.sub('SECTION-HEADER', text)
     # For simplicity later, remove '.' from most common acronym
-    text = text.replace("U.S.", "US")
-    text = text.replace('SEC.', 'Section')
-    text = text.replace('Sec.', 'Section')
-    text = USC_re.sub('USC', text)
+    # text = text.replace("U.S.", "US")
+    # text = text.replace('SEC.', 'Section')
+    # text = text.replace('Sec.', 'Section')
+    # text = USC_re.sub('USC', text)
 
+    # Reemplazar acentos
+    text = A_TILDE_re.sub('a', text)
+    text = E_TILDE_re.sub('e', text)
+    text = I_TILDE_re.sub('i', text)
+    text = O_TILDE_re.sub('o', text)
+    text = U_TILDE_re.sub('u', text)
+
+    # Documentos Legales Argentina
+    text = text.replace('art.', 'articulo')
+
+    # TODO Reescribir o eliminar
     # Remove parantheticals because they are almost always references to laws
     # We could add a special tag, but we just remove for now
     # Note we dont get rid of nested parens because that is a complex re
     # text = PAREN_re.sub('LAWREF', text)
     text = PAREN_re.sub('', text)
 
+    # TODO Reescribir o eliminar
     # Get rid of enums as bullets or ` as bullets
     text = BULLET_RE.sub(' ', text)
 
+    # TODO Reescribir o eliminar
     # Clean html
     text = text.replace('&lt;all&gt;', '')
 
+    # TODO Evaluar
     # Remove annoying punctuation, that's not relevant
     text = BAD_PUNCT_RE.sub('', text)
 
+    # TODO Evaluar
     # Get rid of long sequences of dashes - these are formating
     text = DASH_RE.sub(' ', text)
 
+    # TODO Evaluar
     # removing newlines, tabs, and extra spaces.
     text = WHITESPACE_RE.sub(' ', text)
 
+    # TODO Evaluar
     # If we ended up with "empty" sentences - get rid of them.
     text = EMPTY_SENT_RE.sub('.', text)
 
+    # TODO Evaluar
     # Attempt to create sentences from bullets
     text = replace_semicolon(text)
 
+    # TODO Reescribir o eliminar
     # Fix weird period issues + start of text weirdness
     # text = re.sub('\.(?=[A-Z])', '  . ', text)
     # Get rid of anything thats not a word from the start of the text
@@ -82,12 +95,14 @@ def clean_text(text):
     # Sometimes periods get formatted weird, make sure there is a space between periods and start of sent
     text = FIX_PERIOD.sub(". \g<1>", text)
 
+    # TODO Evaluar
     # Fix quotes
     text = text.replace('``', '"')
     text = text.replace('\'\'', '"')
 
+    # TODO Reescribir o eliminar
     # Add special punct back in
-    text = text.replace('SECTION-HEADER', '<SECTION-HEADER>')
+    # text = text.replace('SECTION-HEADER', '<SECTION-HEADER>')
 
     return text
 
@@ -110,8 +125,13 @@ if __name__ == "__main__":
     nlp.add_pipe("textrank")
     nlp_sentencizer.add_pipe("sentencizer")
 
-    # Expresiones regulares
-
+    # Definición de Expresiones Regulares
+    # Esto permite que sean utilizadas mas tarde con otros métodos de RE.
+    A_TILDE_re = re.compile('[áÁ]')
+    E_TILDE_re = re.compile('[éÉ]')
+    I_TILDE_re = re.compile('[íÍ]')
+    O_TILDE_re = re.compile('[óÓ]')
+    U_TILDE_re = re.compile('[úÚ]')
     USC_re = re.compile('[Uu]\.*[Ss]\.*[Cc]\.]+')
     PAREN_re = re.compile('\([^(]+\ [^\(]+\)')
     BAD_PUNCT_RE = re.compile(r'([%s])' % re.escape('"#%&\*\+/<=>@[\]^{|}~_'), re.UNICODE)
@@ -121,31 +141,74 @@ if __name__ == "__main__":
     EMPTY_SENT_RE = re.compile('[,\.]\ *[\.,]')
     FIX_START_RE = re.compile('^[^A-Za-z]*')
     FIX_PERIOD = re.compile('\.([A-Za-z])')
+    # SECTION [0-9] OR NEW LINE SEC. [0-9] OR Sec. [0-9]
+    # [0-9] 1 o 2 dígitos
     SECTION_HEADER_RE = re.compile('SECTION [0-9]{1,2}\.|\nSEC\.* [0-9]{1,2}\.|Sec\.* [0-9]{1,2}\.')
 
     dataset = pd.read_json('./dataset/dataset-spa-test3.json')
 
     targets = []
+    data = {}
 
     # Auxiliares
     index = dataset.index
     lenght = len(index)
     print("Cantidad de documentos legales: " + str(lenght))
 
-    data = {}
-
+    # Sentencizer para el input
     for x in range(lenght):
         aux_line = dataset.at[x, 'lines']
-        # print('FALLO: ' + aux_line['bill_id'] + '\n' + aux_line['text'] + '\n')
         data['fallo ' + aux_line['bill_id']] = aux_line['text']
+        data['target ' + aux_line['bill_id']] = aux_line['summary']
+        # print('FALLO: ' + aux_line['bill_id'] + '\n' + aux_line['text'] + '\n')
         # print('SUMARIO: ' + aux_line['summary'] + '\n')
-        data['sumario ' + aux_line['bill_id']] = aux_line['summary']
         # Sentencizer
         aux_doc = nlp_sentencizer(aux_line['summary'])
         targets.append(aux_doc)
         text = aux_line['text']
 
+    nlp.max_length = 10 ** 7
+    outputs = []
+
+    for x in range(lenght):
+        aux_sentences = ""  # Auxiliar para oraciones.
+        aux_line = dataset.at[x, 'lines']  # Fallo Judicial.
+        text_preprocessed = text_preprocessing(aux_line['text'])  # Limpieza del fallo.
+        doc = nlp(text_preprocessed)  # Spacy process. Aqui se genera el sumario entre otras funcionalidades que ofrece el pipeline de Spacy.
+        # print('Fallo: ' + aux_line['bill_id'] + '\n')
+        # print('Sumario Generado: \n')
+        # doc._.texrank.summary genera el sumario a partir de la info generada en 'doc'.
+        # Basicamente summary tomas las frases que TextRank considera mas relevantes y las une en un solo objeto.
+        for sentence in doc._.textrank.summary(limit_phrases=15, limit_sentences=5):
+            aux_sentences = aux_sentences + str(sentence) + '\n'
+            # print(sentence)
+        # print('\n')
+        # TODO Verificar si este paso es necesario
+        data['output ' + aux_line['bill_id']] = aux_sentences
+        outputs.append(nlp_sentencizer(aux_sentences))  # Transformamos el sumario en oraciones.
+
     print("Sumarios generados con éxito!")
 
     with open('./output_spacy_summarizer/summaries.json', 'w') as outfile:
         json.dump(data, outfile, indent=4)
+
+    # Comparar oración a oración
+    """
+    for a_sent in outputs[6].sents:
+        a = str(a_sent).lower()
+
+        for b_sent in targets[6].sents:
+            b = str(b_sent).lower()
+            print('Oración a: ' + str(a))
+            print('Oración b: ' + str(b) + '\n')
+            print('Comparación: ')
+            seq = dl.SequenceMatcher(None, a.lower(), b.lower())
+            d = seq.ratio() * 100
+            print(str(d) + '\n')
+
+            print('Matcheos: \n')
+
+            matches = dl.SequenceMatcher(None, a, b).get_matching_blocks()
+            for match in matches:
+                print(a[match.a:match.a + match.size])
+    """
