@@ -119,6 +119,12 @@ def text_preprocessing(text_input):
 
 # SUMMARIZATION
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Parser for PyTextRank parameters')
+    parser.add_argument('--filename', metavar='path', required=True, help='the name of the input file')
+
+    args = parser.parse_args()
 
     nlp = spacy.load("es_core_news_lg")
     nlp_sentencizer = Spanish()
@@ -146,7 +152,7 @@ if __name__ == "__main__":
     # [0-9] 1 o 2 dígitos
     SECTION_HEADER_RE = re.compile('SECTION [0-9]{1,2}\.|\nSEC\.* [0-9]{1,2}\.|Sec\.* [0-9]{1,2}\.')
 
-    dataset = pd.read_json('./dataset/dataset-spa-test3.json')
+    dataset = pd.read_json('./dataset/'+args.filename+'.json')
 
     targets = []
     data = {}
@@ -191,7 +197,7 @@ if __name__ == "__main__":
     print("Sumarios generados con éxito!")
 
     with open('./output_spacy_summarizer/summaries.json', 'w') as outfile:
-        json.dump(data, outfile, indent=4)
+        json.dump(data, outfile, indent=4, sort_keys=True)
 
     # Comparar oración a oración
     """
