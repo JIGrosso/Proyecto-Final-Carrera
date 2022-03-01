@@ -34,14 +34,6 @@ def replace_semicolon(text, threshold=10):
 
 
 def clean_text(text):
-    # TODO Reescribir o eliminar
-    # text = SECTION_HEADER_RE.sub('SECTION-HEADER', text)
-    # For simplicity later, remove '.' from most common acronym
-    # text = text.replace("U.S.", "US")
-    # text = text.replace('SEC.', 'Section')
-    # text = text.replace('Sec.', 'Section')
-    # text = USC_re.sub('USC', text)
-
     # Reemplazar acentos
     text = A_TILDE_re.sub('a', text)
     text = E_TILDE_re.sub('e', text)
@@ -53,52 +45,41 @@ def clean_text(text):
     text = text.replace('art.', 'articulo')
 
     # TODO Reescribir o eliminar
-    # Remove parantheticals because they are almost always references to laws
-    # We could add a special tag, but we just remove for now
-    # Note we dont get rid of nested parens because that is a complex re
-    # text = PAREN_re.sub('LAWREF', text)
-    text = PAREN_re.sub('', text)
-
-    # TODO Reescribir o eliminar
     # Get rid of enums as bullets or ` as bullets
-    text = BULLET_RE.sub(' ', text)
+    # text = BULLET_RE.sub(' ', text)
 
     # TODO Reescribir o eliminar
     # Clean html
-    text = text.replace('&lt;all&gt;', '')
+    # text = text.replace('&lt;all&gt;', '')
 
     # TODO Evaluar
     # Remove annoying punctuation, that's not relevant
-    text = BAD_PUNCT_RE.sub('', text)
-
-    # TODO Evaluar
-    # Get rid of long sequences of dashes - these are formating
-    text = DASH_RE.sub(' ', text)
+    # text = BAD_PUNCT_RE.sub('', text)
 
     # TODO Evaluar
     # removing newlines, tabs, and extra spaces.
-    text = WHITESPACE_RE.sub(' ', text)
+    # text = WHITESPACE_RE.sub(' ', text)
 
     # TODO Evaluar
     # If we ended up with "empty" sentences - get rid of them.
-    text = EMPTY_SENT_RE.sub('.', text)
+    # text = EMPTY_SENT_RE.sub('.', text)
 
     # TODO Evaluar
     # Attempt to create sentences from bullets
-    text = replace_semicolon(text)
+    # text = replace_semicolon(text)
 
     # TODO Reescribir o eliminar
     # Fix weird period issues + start of text weirdness
     # text = re.sub('\.(?=[A-Z])', '  . ', text)
     # Get rid of anything thats not a word from the start of the text
-    text = FIX_START_RE.sub('', text)
+    # text = FIX_START_RE.sub('', text)
     # Sometimes periods get formatted weird, make sure there is a space between periods and start of sent
-    text = FIX_PERIOD.sub(". \g<1>", text)
+    # text = FIX_PERIOD.sub(". \g<1>", text)
 
     # TODO Evaluar
     # Fix quotes
-    text = text.replace('``', '"')
-    text = text.replace('\'\'', '"')
+    # text = text.replace('``', '"')
+    # text = text.replace('\'\'', '"')
 
     # TODO Reescribir o eliminar
     # Add special punct back in
@@ -110,7 +91,7 @@ def clean_text(text):
 # LIMPIEZA DE TEXTO
 def text_preprocessing(text_input):
     # TODO Verificar si no afecta al replace(art., articulo)
-    text_input = replace_semicolon(text_input, 10)
+    # text_input = replace_semicolon(text_input, 10)
 
     text_input = clean_text(text_input)
 
@@ -134,23 +115,20 @@ if __name__ == "__main__":
 
     # Definición de Expresiones Regulares
     # Esto permite que sean utilizadas mas tarde con otros métodos de RE.
+    # fs. 227/233
+    # Leyes 23.660
     A_TILDE_re = re.compile('[áÁ]')
     E_TILDE_re = re.compile('[éÉ]')
     I_TILDE_re = re.compile('[íÍ]')
     O_TILDE_re = re.compile('[óÓ]')
     U_TILDE_re = re.compile('[úÚ]')
-    USC_re = re.compile('[Uu]\.*[Ss]\.*[Cc]\.]+')
-    PAREN_re = re.compile('\([^(]+\ [^\(]+\)')
-    BAD_PUNCT_RE = re.compile(r'([%s])' % re.escape('"#%&\*\+/<=>@[\]^{|}~_'), re.UNICODE)
-    BULLET_RE = re.compile('\n[\ \t]*`*\([a-zA-Z0-9]*\)')
-    DASH_RE = re.compile('--+')
-    WHITESPACE_RE = re.compile('\s+')
-    EMPTY_SENT_RE = re.compile('[,\.]\ *[\.,]')
-    FIX_START_RE = re.compile('^[^A-Za-z]*')
-    FIX_PERIOD = re.compile('\.([A-Za-z])')
-    # SECTION [0-9] OR NEW LINE SEC. [0-9] OR Sec. [0-9]
-    # [0-9] 1 o 2 dígitos
-    SECTION_HEADER_RE = re.compile('SECTION [0-9]{1,2}\.|\nSEC\.* [0-9]{1,2}\.|Sec\.* [0-9]{1,2}\.')
+    # BAD_PUNCT_RE = re.compile(r'([%s])' % re.escape('"#%&\*\+/<=>@[\]^{|}~_'), re.UNICODE)
+    # BULLET_RE = re.compile('\n[\ \t]*`*\([a-zA-Z0-9]*\)')
+    # DASH_RE = re.compile('--+')
+    # WHITESPACE_RE = re.compile('\s+')
+    # EMPTY_SENT_RE = re.compile('[,\.]\ *[\.,]')
+    # FIX_START_RE = re.compile('^[^A-Za-z]*')
+    # FIX_PERIOD = re.compile('\.([A-Za-z])')
 
     dataset = pd.read_json('./dataset/'+args.filename+'.json')
 
@@ -188,6 +166,7 @@ if __name__ == "__main__":
         # Basicamente summary tomas las frases que TextRank considera mas relevantes y las une en un solo objeto.
         for sentence in doc._.textrank.summary(limit_phrases=15, limit_sentences=5):
             aux_sentences = aux_sentences + str(sentence) + '\n'
+            # TODO Tratar de obtener puntuación para oración
             # print(sentence)
         # print('\n')
         # TODO Verificar si este paso es necesario
