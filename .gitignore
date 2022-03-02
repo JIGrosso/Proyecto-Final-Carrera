@@ -131,3 +131,4 @@ dmypy.json
 # Data
 dataset
 output_spacy_summarizer
+.idea
