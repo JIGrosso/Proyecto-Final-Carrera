@@ -175,8 +175,8 @@ if __name__ == "__main__":
 
     print("Sumarios generados con éxito!")
 
-    with open('./output_spacy_summarizer/summaries.json', 'w') as outfile:
-        json.dump(data, outfile, indent=4, sort_keys=True)
+    with open('./output_spacy_summarizer/summaries.json', 'w', encoding='utf8') as outfile:
+        json.dump(data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 
     # Comparar oración a oración
     """
