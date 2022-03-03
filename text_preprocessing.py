@@ -13,12 +13,15 @@ from spacy.lang.es import Spanish
 # fs. 227/233
 # Leyes 23.660
 # Excma.
+# -v. cláusula séptima-
+
 # TODO Limpiar
 A_TILDE_re = re.compile('[áÁ]')
 E_TILDE_re = re.compile('[éÉ]')
 I_TILDE_re = re.compile('[íÍ]')
 O_TILDE_re = re.compile('[óÓ]')
 U_TILDE_re = re.compile('[úÚ]')
+DOT_BETWEEN_NUMBERS_re = re.compile(r"\b[0-9]{1,2}(?:\.[0-9]{3})+\b")
 
 
 def __replace_semicolon(text, threshold=10):
@@ -62,7 +65,14 @@ def __clean_text(text):
     refined_text = refined_text.replace('Dr.', 'doctor')
     refined_text = refined_text.replace('Dra.', 'doctora')
     refined_text = refined_text.replace('Dres.', 'doctores')
-    refined_text = refined_text.replace('pag', 'página')
+    refined_text = refined_text.replace('Sr.', 'señor')
+    refined_text = refined_text.replace('Sra.', 'señora')
+    refined_text = refined_text.replace('Sres.', 'señores')
+    refined_text = refined_text.replace('pag.', 'página')
+    refined_text = refined_text.replace('inc.', 'inciso')
+
+    # Elimina los puntos entre números. Ejemplo : 16.233 -> 16233
+    refined_text = re.sub(DOT_BETWEEN_NUMBERS_re, lambda x: x.group().replace(".", ""), refined_text)
 
     # TODO Reescribir o eliminar
     # Get rid of enums as bullets or ` as bullets
@@ -134,4 +144,20 @@ def process(dataset):
     return data
 
 
+def __test():
+
+    pattern = r"\b[0-9]{1,2}(?:\.[0-9]{3})+\b"
+
+    numbers = [
+        '23.756',
+        '3.453',
+        '556',
+        '1.658.239'
+    ]
+
+    for s in numbers:
+        print(re.sub(pattern, lambda x: x.group().replace(".", ""), s))
+
+
+__test()
 
