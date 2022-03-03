@@ -132,12 +132,11 @@ if __name__ == "__main__":
 
     dataset = pd.read_json('./dataset/'+args.filename+'.json')
 
-    targets = []
-    data = {}
-
     # Auxiliares
-    index = dataset.index
-    lenght = len(index)
+    data = {}  # Dict con todos los datos
+    targets = []  # Array con los targets (Lo uso con el sentencizer, creo que es para el ROUGE)
+    index = dataset.index  # Longitud del dataset
+    lenght = len(index)  # Longitud del dataset
     print("Cantidad de documentos legales: " + str(lenght))
 
     # Sentencizer para el input
