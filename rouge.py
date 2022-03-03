@@ -1,1 +1,0 @@
-# Script generico para utiliazr rouge
