@@ -158,6 +158,3 @@ def __test():
     for s in numbers:
         print(re.sub(pattern, lambda x: x.group().replace(".", ""), s))
 
-
-__test()
-
