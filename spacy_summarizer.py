@@ -24,7 +24,6 @@ def summary(preprocessed_dataset):
     summaries = {}
 
     nlp.max_length = 10 ** 7  # TODO VERIFICAR PARA QUE SIRVE ESTO
-    outputs = []
 
     # Iterar sobre un Dict que viene desde el main
     # TODO El dict que viene deberían ser solo los inputs
@@ -44,6 +43,6 @@ def summary(preprocessed_dataset):
 
     print("Sumarios generados con éxito!")
 
-    with open('./output_spacy_summarizer/summaries.json', 'w', encoding='utf8') as outfile:
+    with open('./outputs/spacy_summaries.json', 'w', encoding='utf8') as outfile:
         json.dump(summaries, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 

@@ -11,7 +11,6 @@ from spacy.lang.es import Spanish
 # Definición de Expresiones Regulares
 # Esto permite que sean utilizadas mas tarde con otros métodos de RE.
 # fs. 227/233
-# Leyes 23.660
 # Excma.
 # -v. cláusula séptima-
 
@@ -124,24 +123,31 @@ def process(dataset):
     # dataset = pd.read_json('./dataset/'+args.filename+'.json')
 
     # Auxiliares
-    data = {}  # Dict con todos los datos
+    input_data = {}  # Dict con todos los inputs
+    target_data = {}  # Dict con todos los targets
     index = dataset.index  # Longitud del dataset
     lenght = len(index)  # Longitud del dataset
     print("Cantidad de documentos legales: " + str(lenght))
 
-    # Sentencizer para el input
+    # Itero sobre el Dataset y lo fragmento
     for x in range(lenght):
-        aux_line = dataset.at[x, 'lines']  # Leo cada JSON LINE
-        data['fallo ' + aux_line['bill_id']] = aux_line['text']  # Agrego el INPUT al Dict
-        data['target ' + aux_line['bill_id']] = aux_line['summary']  # Agrego el TARGET al Dict
+        json_line = dataset.at[x, 'lines']  # Leo cada JSON LINE
+        input_data[json_line['bill_id']] = json_line['text']  # Agrego el INPUT al Dict
+        target_data[json_line['bill_id']] = json_line['summary']  # Agrego el TARGET al Dict
 
-        input_text = __replace_semicolon(aux_line['text'], 10)
+        input_text = __replace_semicolon(json_line['text'], 10)
         cleaned_text = __clean_text(input_text)  # Limpieza del fallo. TEXT_INPUT es lo que se le envia a NLP.
 
-        # Agrego al Dict Master
-        data['fallo ' + aux_line['bill_id']] = cleaned_text
+        # Actualizo el Dict con los inputs preprocesados
+        input_data[json_line['bill_id']] = cleaned_text
 
-    return data
+    # Guardado
+    with open('./outputs/preprocessed_input.json', 'w', encoding='utf8') as outfile:
+        json.dump(input_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+    with open('./outputs/targets.json', 'w', encoding='utf8') as outfile:
+        json.dump(target_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+
+    return input_data
 
 
 def __test():
