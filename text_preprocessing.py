@@ -135,7 +135,8 @@ def process(dataset):
         input_data[json_line['bill_id']] = json_line['text']  # Agrego el INPUT al Dict
         target_data[json_line['bill_id']] = json_line['summary']  # Agrego el TARGET al Dict
 
-        input_text = __replace_semicolon(json_line['text'], 10)
+        # input_text = __replace_semicolon(json_line['text'], 10)
+        input_text = json_line['text']
         cleaned_text = __clean_text(input_text)  # Limpieza del fallo. TEXT_INPUT es lo que se le envia a NLP.
 
         # Actualizo el Dict con los inputs preprocesados

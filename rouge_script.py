@@ -11,6 +11,8 @@ def get_rouge_scores():
     rouge = Rouge()  # Para calcular Rouge desde Strings.
     files_rouge = FilesRouge()  # Para calcular Rouge desde Archivos.
 
+    scores_response = {}
+
     with open('./outputs/targets.json', encoding='utf8') as json_file:
         targets = json.load(json_file)
     with open('./outputs/spacy_summaries.json', encoding='utf8') as json_file:
@@ -20,7 +22,8 @@ def get_rouge_scores():
 
     for text_id in spacy_outputs:
         scores = rouge.get_scores(targets[text_id], spacy_outputs[text_id])
-        print(scores)
+        scores_response[text_id] = scores
 
+    return scores_response
 
 get_rouge_scores()
