@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import text_preprocessing
 import text_features
-import spacy_summarizer
+import text_rank_summarizer
 import rouge_script
 import plots
 
@@ -21,11 +21,10 @@ if __name__ == "__main__":
     print("Preprocessing Text...")
     preprocessed_text = text_preprocessing.process(dataset)
 
-    text_features.get_features(preprocessed_text)
+    # text_features.get_features(preprocessed_text)
 
-'''
     print("Applying Summarizer...")
-    spacy_summarizer.summary(preprocessed_text)
+    text_rank_summarizer.summary(preprocessed_text)
 
     print("Calculating ROUGE metrics...")
     rouge_scores_data = rouge_script.get_rouge_scores()
@@ -34,4 +33,3 @@ if __name__ == "__main__":
     plots.print_rouge(rouge_scores_data)
 
     print("Process finished...")
-'''

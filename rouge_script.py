@@ -26,4 +26,4 @@ def get_rouge_scores():
 
     return scores_response
 
-get_rouge_scores()
+# get_rouge_scores()
