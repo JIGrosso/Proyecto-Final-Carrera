@@ -20,8 +20,20 @@ def get_thematic_words(input_text):
 
 def get_features_vector(sentence):
 
+    # Dividir en parrafos
+    # Dividir en oraciones
+
+
     # Thematic words
     get_thematic_words(sentence)
+
+    # Calcular Posición de las oraciones
+    # Calcular Longitud de las oraciones
+    # Calcular Posición de las oraciones respecto al párrafo que pertenecen
+    # Calcular Sustantivos Propios
+    # Calcular Mamed Entities
+    # Calcular TF ISF
+    # Calcular Sentence Similarity
 
 
 def __test():
