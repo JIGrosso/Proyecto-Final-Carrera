@@ -30,6 +30,8 @@ if __name__ == "__main__":
     rouge_scores_data = rouge_script.get_rouge_scores()
 
     print("Printing ROUGE metrics...")
-    plots.print_rouge(rouge_scores_data)
+    plots.print_rouge_recall(rouge_scores_data)
+    plots.print_rouge_precision(rouge_scores_data)
+    plots.print_rouge_f1_score(rouge_scores_data)
 
     print("Process finished...")

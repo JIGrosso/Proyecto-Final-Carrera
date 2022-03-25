@@ -66,8 +66,11 @@ def __clean_text(text):
     refined_text = refined_text.replace('Excmo.', 'excelentisimo')
     refined_text = refined_text.replace('pag.', 'página')
     refined_text = refined_text.replace('inc.', 'inciso')
+
     refined_text = refined_text.replace("f.", "foja")
     refined_text = refined_text.replace("fs.", "fojas")
+    # refined_text = refined_text.replace('\r\r\n', '')
+
 
     # Elimina los puntos entre números. Ejemplo : 16.233 -> 16233
     refined_text = re.sub(DOT_BETWEEN_NUMBERS_re, lambda x: x.group().replace(".", ""), refined_text)
