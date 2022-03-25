@@ -18,14 +18,37 @@ def get_thematic_words(input_text):
     print(sorted_dict)
 
 
-def get_features_vector(sentence):
+def sentence_position(sentence):
 
-    # Dividir en parrafos
-    # Dividir en oraciones
+    return 1
 
+
+def sentence_lenght(sentence):
+
+    return 1
+
+
+def sentence_to_paragraph(input_text):
+
+    return 1
+
+
+def proper_nouns(sentece):
+
+    return 1
+
+
+def get_features_vector(splitted_input_data):
+
+    # input_data es un dict donde cada elemento es un array de parrafos
+    for text_id in splitted_input_data:
+        splitted_text = splitted_input_data[text_id]  # Array de parrafos
+        # Dividir en oraciones
+        for paragraph in splitted_text:
+            get_thematic_words(paragraph)
 
     # Thematic words
-    get_thematic_words(sentence)
+    # get_thematic_words(sentence)
 
     # Calcular Posición de las oraciones
     # Calcular Longitud de las oraciones
@@ -43,6 +66,6 @@ def __test():
     get_thematic_words(texto)
 
 
-__test()
+# __test()
 
 

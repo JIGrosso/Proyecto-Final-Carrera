@@ -19,9 +19,9 @@ if __name__ == "__main__":
     dataset = pd.read_json('./dataset/' + args.filename + '.json')
 
     print("Preprocessing Text...")
-    preprocessed_text = text_preprocessing.process(dataset)
+    preprocessed_text, splitted_text = text_preprocessing.process(dataset)
 
-    # text_features.get_features(preprocessed_text)
+    text_features.get_features_vector(splitted_text)
 
     print("Applying Summarizer...")
     text_rank_summarizer.summary(preprocessed_text)
