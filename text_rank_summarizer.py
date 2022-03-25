@@ -1,9 +1,4 @@
-import pandas as pd
 import json
-import re
-import numpy as np
-import difflib as dl
-
 import spacy
 import pytextrank
 from spacy.lang.es import Spanish
@@ -16,7 +11,7 @@ def summary(preprocessed_dataset):
     nlp = spacy.load("es_core_news_lg")
     nlp_sentencizer = Spanish()
 
-    # Add TextRank implementation to the pipeline
+    # Add TextRank implementation to the pipeline || add PyTextRank to the spaCy pipeline
     nlp.add_pipe("textrank")
     nlp_sentencizer.add_pipe("sentencizer")
 

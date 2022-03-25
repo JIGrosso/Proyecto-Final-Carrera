@@ -2,7 +2,8 @@ import argparse
 import json
 import pandas as pd
 import text_preprocessing
-import spacy_summarizer
+import text_features
+import text_rank_summarizer
 import rouge_script
 import plots
 
@@ -18,10 +19,12 @@ if __name__ == "__main__":
     dataset = pd.read_json('./dataset/' + args.filename + '.json')
 
     print("Preprocessing Text...")
-    preprocessed_text = text_preprocessing.process(dataset)
+    preprocessed_text, splitted_text = text_preprocessing.process(dataset)
+
+    text_features.get_features_vector(splitted_text)
 
     print("Applying Summarizer...")
-    spacy_summarizer.summary(preprocessed_text)
+    text_rank_summarizer.summary(preprocessed_text)
 
     print("Calculating ROUGE metrics...")
     rouge_scores_data = rouge_script.get_rouge_scores()
