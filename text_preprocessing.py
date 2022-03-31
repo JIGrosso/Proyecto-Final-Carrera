@@ -118,20 +118,28 @@ def __remove_stop_words(input_text):
         if word not in stopwords.words('spanish'):
             important_words.append(word)
 
-    print(important_words)
+    nsw_text = " "
+
+    return nsw_text.join(important_words)
 
     # This is the more pythonic way
     # important_words = filter(lambda x: x not in stopwords.words('spanish'), words)
 
 
-def __split_input(text):
 
+def __split_input(text):
+    '''
+        Divide el input en párrafos haciendo uso de "/r/r/n".
+        Luego limpia con __clean_text() cada division.
+    '''
+    # TODO eliminar las oraciones cortas
     # Split en parrafos
     paragraphs = text.split("\r\r\n")
     cleaned_paragraphs = []
     for p in paragraphs:
-        if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras
-            cleaned_paragraphs.append(__clean_text(p))  # Aplica limpieza del texto
+        # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras
+        nsw_paragraph = __remove_stop_words(p)
+        cleaned_paragraphs.append(__clean_text(nsw_paragraph))  # Aplica limpieza del texto
 
     return cleaned_paragraphs
 
@@ -157,10 +165,6 @@ def process(dataset):
 
         splitted_text = __split_input(json_line['text'])
         cleaned_text = __clean_text(json_line['text'])
-        '''
-        for paragraph in splitted_text:
-            cleaned_text = cleaned_text + __clean_text(paragraph) + '/n'  # Limpieza del fallo. Agregar el '/n' hizo que mejoren los resultados.
-        '''
 
         # Actualizo el Dict con los inputs preprocesados
         input_data[json_line['bill_id']] = cleaned_text  # Agrego el INPUT al Dict. CLEANED_TEXT es lo que se le envia a NLP.
@@ -169,6 +173,8 @@ def process(dataset):
     # Guardado
     with open('./outputs/preprocessed_input.json', 'w', encoding='utf8') as outfile:
         json.dump(input_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+    with open('./outputs/preprocessed_splitted_input.json', 'w', encoding='utf8') as outfile:
+        json.dump(splitted_input_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
     with open('./outputs/targets.json', 'w', encoding='utf8') as outfile:
         json.dump(target_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 
