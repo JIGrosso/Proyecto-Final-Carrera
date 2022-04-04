@@ -57,7 +57,7 @@ def sentence_position(input_text):
     return scores
 
 
-def sentence_lenght(input_text):
+def sentence_length(input_text):
     scores = []
     for sentence in input_text:
         score = 0
@@ -77,12 +77,50 @@ def sentence_to_paragraph(input_text):
 
 
 def proper_nouns(input_text):
-    tags = []
+    scores = []
     for sentence in input_text:
-        tag = nltk.pos_tag(sentence.split())
-        tags.append(tag)
-    # TODO Continuar revisando los tags y calcular scores
-    print(tags)
+        score = 0
+        length = len(sentence.split())
+        tag_list = nltk.pos_tag(sentence.split())
+        for tag in tag_list:
+            if tag[1] == "NNP" or tag[1] == "NNPS":
+                score += 1
+        scores.append(score/float(length))
+    print(scores)
+
+    return scores
+
+
+def __is_number(word):
+    try:
+        float(word)
+        return True
+    except ValueError:
+        return False
+
+
+def numerals(input_text):
+    scores = []
+    for sentence in input_text:
+        sentence_split = sentence.split()
+        score = 0
+        for word in sentence_split:
+            if __is_number(word):
+                score += 1
+        scores.append(score/float(len(sentence_split)))
+    print(scores)
+    return scores
+
+
+def named_entities(input_text):
+
+    for sentence in input_text:
+        tagged_sentence = nltk.pos_tag(sentence.split())
+        chunked_sentence = nltk.ne_chunk(tagged_sentence, binary=True)
+        print(chunked_sentence)
+        # TODO Continuar con este feature. Las NE que reconoce son erroneas. Esto se debe a las mayúsculas.
+    return 1
+
 
 
 def get_features_vector(splitted_input_data):
@@ -93,8 +131,10 @@ def get_features_vector(splitted_input_data):
         # Dividir en oraciones
         get_thematic_words(splitted_input_data[text_id])
         sentence_position(splitted_input_data[text_id])
-        sentence_lenght(splitted_input_data[text_id])
+        sentence_length(splitted_input_data[text_id])
         proper_nouns(splitted_input_data[text_id])
+        numerals(splitted_input_data[text_id])
+        named_entities(splitted_input_data[text_id])
 
     # Thematic words
     # get_thematic_words(sentence)

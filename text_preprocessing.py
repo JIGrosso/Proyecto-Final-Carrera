@@ -106,7 +106,8 @@ def __clean_text(text):
 def __remove_stop_words(input_text):
 
     # We only want to work with lowercase for the comparisons
-    text = input_text.lower()
+    # text = input_text.lower()
+    text = input_text  # Utilizar mayúsculas hace que el PoS de mejores resultados.
 
     # remove punctuation and split into seperate words
     words = re.findall(r'\w+', text, flags=re.UNICODE)  # | re.LOCALE)
@@ -132,12 +133,11 @@ def __split_input(text):
         Divide el input en párrafos haciendo uso de "/r/r/n".
         Luego limpia con __clean_text() cada division.
     '''
-    # TODO eliminar las oraciones cortas
     # Split en parrafos
     paragraphs = text.split("\r\r\n")
     cleaned_paragraphs = []
     for p in paragraphs:
-        # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras
+        # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
         nsw_paragraph = __remove_stop_words(p)
         cleaned_paragraphs.append(__clean_text(nsw_paragraph))  # Aplica limpieza del texto
 
