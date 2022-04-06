@@ -76,12 +76,17 @@ def sentence_to_paragraph(input_text):
     return 1
 
 
+def __tagger(sentence):
+
+    return nltk.pos_tag(sentence.split())
+
+
 def proper_nouns(input_text):
     scores = []
     for sentence in input_text:
         score = 0
         length = len(sentence.split())
-        tag_list = nltk.pos_tag(sentence.split())
+        tag_list = __tagger(sentence)
         for tag in tag_list:
             if tag[1] == "NNP" or tag[1] == "NNPS":
                 score += 1
@@ -112,15 +117,31 @@ def numerals(input_text):
     return scores
 
 
+def __extract_named_entities(c):
+    entity_names = []
+
+    if hasattr(c, 'label') and c.label:
+        if c.label() == 'NE':
+            entity_names.append(' '.join(child[0] for child in c))
+        else:
+            for child in c:
+                entity_names.extend(__extract_named_entities(child))
+
+    return entity_names
+
 def named_entities(input_text):
 
     for sentence in input_text:
-        tagged_sentence = nltk.pos_tag(sentence.split())
+        tagged_sentence = __tagger(sentence)
         chunked_sentence = nltk.ne_chunk(tagged_sentence, binary=True)
-        print(chunked_sentence)
-        # TODO Continuar con este feature. Las NE que reconoce son erroneas. Esto se debe a las mayúsculas.
-    return 1
+        entity_names = []
+        for c in chunked_sentence:
+            entity_names.extend(__extract_named_entities(c))
+        set(entity_names)
+        print(len(entity_names))
 
+        # TODO Continuar con este feature. Las NE que reconoce son erroneas. Creo que puede ser debido al idioma. Probar con el NE Recognition de Spacy.
+    return 1
 
 
 def get_features_vector(splitted_input_data):
