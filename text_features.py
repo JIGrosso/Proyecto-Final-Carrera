@@ -129,6 +129,7 @@ def __extract_named_entities(c):
 
     return entity_names
 
+
 def named_entities(input_text):
 
     for sentence in input_text:
