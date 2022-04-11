@@ -1,4 +1,5 @@
 # Module to work with features for the Deep Learning technique
+import collections
 import math
 import nltk
 from collections import Counter
@@ -144,19 +145,39 @@ def named_entities(input_text):
         # TODO Continuar con este feature. Las NE que reconoce son erroneas. Creo que puede ser debido al idioma. Probar con el NE Recognition de Spacy.
     return 1
 
+def tf_isf(input_text):
+    # TODO Eliminar caracteres especiales y palabras de menos de tres caracteres
+    scores = []
+    for sentence in input_text:
+        sum_tfisf = 0
+        sentence_len = len(sentence.split())
+        sentence_lower = sentence.lower()
+        counts = collections.Counter(sentence_lower.split())
+        for word in counts.keys():
+            count_word = 0
+            for aux_sentence in input_text:
+                aux_sentence_lower = aux_sentence.lower()
+                aux_counts = collections.Counter(aux_sentence_lower.split())
+                if word in aux_counts.keys():
+                    count_word = count_word + aux_counts[word]
+            sum_tfisf += counts[word] * count_word
+        scores.append(math.log(sum_tfisf/sentence_len))
+    print (scores)
+    return scores
 
 def get_features_vector(splitted_input_data):
 
     # input_data es un dict donde cada elemento es un array de parrafos
     for text_id in splitted_input_data:
         splitted_text = splitted_input_data[text_id]  # Array de parrafos
-        # Dividir en oraciones
+        # TODO Dividir en oraciones
         get_thematic_words(splitted_input_data[text_id])
         sentence_position(splitted_input_data[text_id])
         sentence_length(splitted_input_data[text_id])
         proper_nouns(splitted_input_data[text_id])
         numerals(splitted_input_data[text_id])
         named_entities(splitted_input_data[text_id])
+        tf_isf(splitted_input_data[text_id])
 
     # Thematic words
     # get_thematic_words(sentence)

@@ -96,9 +96,9 @@ def __clean_text(text):
     # Fix weird period issues + start of text weirdness
     # text = re.sub('\.(?=[A-Z])', '  . ', text)
     # Get rid of anything thats not a word from the start of the text
-    refined_text = FIX_START_re.sub('', refined_text)
+    # refined_text = FIX_START_re.sub('', refined_text)
     # Sometimes periods get formatted weird, make sure there is a space between periods and start of sent
-    refined_text = FIX_PERIOD_re.sub(". \g<1>", refined_text)
+    # refined_text = FIX_PERIOD_re.sub(". \g<1>", refined_text)
 
     return refined_text
 
@@ -111,6 +111,9 @@ def __remove_stop_words(input_text):
 
     # remove punctuation and split into seperate words
     words = re.findall(r'\w+', text, flags=re.UNICODE)  # | re.LOCALE)
+
+    # split into separate words with punctuation
+    words = text.split()
 
     # This is the simple way to remove stop words
 
