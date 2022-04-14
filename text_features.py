@@ -3,6 +3,7 @@ import collections
 import math
 import nltk
 from collections import Counter
+from nltk.tokenize import sent_tokenize
 
 
 def get_thematic_words(input_text):
@@ -20,7 +21,7 @@ def get_thematic_words(input_text):
     thematic_words = []
     for word in most_common:
         thematic_words.append(str(word[0]))
-    print(thematic_words)
+    print("Thematic words: " + thematic_words)
     # Scores
     scores = []
     for sentence in input_text:
@@ -31,7 +32,7 @@ def get_thematic_words(input_text):
         score = 1.0 * score / number_of_words
         scores.append(score)
 
-    print(scores)
+    print("Thematic words score: " + scores)
     return scores
 
 
@@ -72,7 +73,10 @@ def sentence_length(input_text):
     return scores
 
 
-def sentence_to_paragraph(input_text):
+def sentence_to_paragraph(input_p, input_s):
+    scores = []
+    # Tomo un párrafo. String no dividido en oraciones.
+    # Una buena solución sería tener un array de arrays para las oraciones. De esa forma es simple determinar la posición de la oración.
 
     return 1
 
@@ -120,7 +124,6 @@ def numerals(input_text):
 
 def __extract_named_entities(c):
     entity_names = []
-
     if hasattr(c, 'label') and c.label:
         if c.label() == 'NE':
             entity_names.append(' '.join(child[0] for child in c))
@@ -132,7 +135,8 @@ def __extract_named_entities(c):
 
 
 def named_entities(input_text):
-
+    # TODO Continuar con este feature. Las NE que reconoce son erroneas. Creo que puede ser debido al idioma. Probar con el NE Recognition de Spacy.
+    scores = []
     for sentence in input_text:
         tagged_sentence = __tagger(sentence)
         chunked_sentence = nltk.ne_chunk(tagged_sentence, binary=True)
@@ -140,10 +144,10 @@ def named_entities(input_text):
         for c in chunked_sentence:
             entity_names.extend(__extract_named_entities(c))
         set(entity_names)
-        print(len(entity_names))
+        scores.append(len(entity_names))
 
-        # TODO Continuar con este feature. Las NE que reconoce son erroneas. Creo que puede ser debido al idioma. Probar con el NE Recognition de Spacy.
-    return 1
+    return scores
+
 
 def tf_isf(input_text):
     # TODO Eliminar caracteres especiales y palabras de menos de tres caracteres
@@ -162,8 +166,9 @@ def tf_isf(input_text):
                     count_word = count_word + aux_counts[word]
             sum_tfisf += counts[word] * count_word
         scores.append(math.log(sum_tfisf/sentence_len))
-    print (scores)
+    print(scores)
     return scores
+
 
 def get_features_vector(splitted_input_data):
 

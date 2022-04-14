@@ -3,6 +3,7 @@ import re
 
 import pandas as pd
 from nltk.corpus import stopwords
+from nltk.tokenize import sent_tokenize
 
 
 # Definición de Expresiones Regulares
@@ -119,7 +120,7 @@ def __remove_stop_words(input_text):
 
     important_words = []
     for word in words:
-        if word not in stopwords.words('spanish'):
+        if word.lower() not in stopwords.words('spanish'):
             important_words.append(word)
 
     nsw_text = " "
@@ -130,6 +131,9 @@ def __remove_stop_words(input_text):
     # important_words = filter(lambda x: x not in stopwords.words('spanish'), words)
 
 
+def __split_into_sentences(paragraph):
+    return sent_tokenize(paragraph)
+
 
 def __split_input(text):
     '''
@@ -139,12 +143,22 @@ def __split_input(text):
     # Split en parrafos
     paragraphs = text.split("\r\r\n")
     cleaned_paragraphs = []
+    cleaned_sentences = []
     for p in paragraphs:
         # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
-        nsw_paragraph = __remove_stop_words(p)
-        cleaned_paragraphs.append(__clean_text(nsw_paragraph))  # Aplica limpieza del texto
+        cleaned_paragraph = __clean_text(p)
+        nsw_paragraph = __remove_stop_words(cleaned_paragraph)
 
-    return cleaned_paragraphs
+        cleaned_paragraphs.append(nsw_paragraph)  # Aplica limpieza del texto
+
+        # Split into sentences
+        sentences = __split_into_sentences(nsw_paragraph)
+        for s in sentences:
+            # nsw_sentence = __remove_stop_words(s)
+            cleaned_sentences.append(s)
+    print(cleaned_sentences)
+
+    return cleaned_paragraphs, cleaned_sentences
 
 
 def process(dataset):
