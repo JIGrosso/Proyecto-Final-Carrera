@@ -60,9 +60,11 @@ def __clean_text(text):
     refined_text = refined_text.replace('Dr.', 'doctor')
     refined_text = refined_text.replace('Dra.', 'doctora')
     refined_text = refined_text.replace('Dres.', 'doctores')
+    refined_text = refined_text.replace('Dras.', 'doctores')
     refined_text = refined_text.replace('Sr.', 'señor')
     refined_text = refined_text.replace('Sra.', 'señora')
     refined_text = refined_text.replace('Sres.', 'señores')
+    refined_text = refined_text.replace('Sras.', 'señoras')
     refined_text = refined_text.replace('Excma.', 'excelentisima')
     refined_text = refined_text.replace('Excmo.', 'excelentisimo')
     refined_text = refined_text.replace('pag.', 'página')
@@ -70,6 +72,58 @@ def __clean_text(text):
 
     refined_text = refined_text.replace("f.", "foja")
     refined_text = refined_text.replace("fs.", "fojas")
+    refined_text = refined_text.replace("1er.", "primer")
+    refined_text = refined_text.replace("1ro.", "primero")
+    refined_text = refined_text.replace("1ero.", "primero")
+    refined_text = refined_text.replace("1era.", "primera")
+    refined_text = refined_text.replace("1ra.", "primera")
+    refined_text = refined_text.replace("2do.", "segundo")
+    refined_text = refined_text.replace("2da.", "segunda")
+    refined_text = refined_text.replace("4to.", "cuarto")
+    refined_text = refined_text.replace("4ta.", "cuarta")
+    refined_text = refined_text.replace("5to.", "quinto")
+    refined_text = refined_text.replace("5ta.", "quinta")
+    refined_text = refined_text.replace("ss.", "siguientes")
+    refined_text = refined_text.replace("sgtes.", "siguientes")
+    refined_text = refined_text.replace("vta.", "vuelta")
+    refined_text = refined_text.replace("C.N.Civ.", "Código Nacional Civil")
+    refined_text = refined_text.replace("C. N. Civ.", "Código Nacional Civil")
+    refined_text = refined_text.replace("C. N.", "Código Nacional")
+    refined_text = refined_text.replace("C.N.", "Código Nacional")
+    refined_text = refined_text.replace("Civ.", "Civil")
+    refined_text = refined_text.replace("L.O.", "Ley Orgánica") #chequear esta
+    refined_text = refined_text.replace("Nro.", "Número")
+    refined_text = refined_text.replace("cctes.", "consecuentes")
+    refined_text = refined_text.replace("D.L.", "Decreto Ley")
+    refined_text = refined_text.replace("D. L.", "Decreto Ley")
+    refined_text = refined_text.replace("L.C.T.", "Ley del Contrato del Trabajo")
+    refined_text = refined_text.replace("L. C. T.", "Ley del Contrato del Trabajo")
+    refined_text = refined_text.replace("Ed.", "Edición")
+    refined_text = refined_text.replace("ed.", "edición")
+    refined_text = refined_text.replace("E.D.", "E D")
+    refined_text = refined_text.replace("L.L.", "L L")
+    refined_text = refined_text.replace("pág.", "página")
+    refined_text = refined_text.replace("Const.", "Constitución")
+    refined_text = refined_text.replace("Avda.", "Ávenida")
+    refined_text = refined_text.replace("R.J.N.", "Reglamento para la Justicia Nacional")
+    refined_text = refined_text.replace("Cód.", "Código")
+    refined_text = refined_text.replace("Cod.", "Código")
+    refined_text = refined_text.replace("C. P.", "Código Penal")
+    refined_text = refined_text.replace("C.P.", "Código Penal")
+    refined_text = refined_text.replace("C.P.P.", "Código Procesal Penal")
+    refined_text = refined_text.replace("C. P. P.", "Código Procesal Penal")
+    refined_text = refined_text.replace("C.P.C.", "Código Procesal Constitucional")
+    refined_text = refined_text.replace("C. P. C.", "Código Procesal Constitucional")
+    refined_text = refined_text.replace("Bs.", "Buenos")
+    refined_text = refined_text.replace("As.", "Aires")
+    refined_text = refined_text.replace("Bs.As.", "Buenos Aires")
+    refined_text = refined_text.replace("ob.", "obra")
+    refined_text = refined_text.replace("cit.", "citada")
+    refined_text = refined_text.replace("Prov.", "Provincial")
+    refined_text = refined_text.replace("Nac.", "Nacional")
+    refined_text = refined_text.replace("Expte.", "Expediente")
+    refined_text = refined_text.replace("Direc.", "Dirección")
+    refined_text = refined_text.replace("Art.", "Artículo")
     # refined_text = refined_text.replace('\r\r\n', '')
 
 
@@ -145,18 +199,38 @@ def __split_input(text):
     cleaned_paragraphs = []
     cleaned_sentences = []
     for p in paragraphs:
-        # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
+       # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
         cleaned_paragraph = __clean_text(p)
         nsw_paragraph = __remove_stop_words(cleaned_paragraph)
 
-        cleaned_paragraphs.append(nsw_paragraph)  # Aplica limpieza del texto
+       # Loop para chequear que oraciones sean mayor a 3 palabras, y pasarlas a un arreglo que luego se hace append a cleaned_paragrahps
+
+        aux_splitted_sentences = __split_into_sentences(nsw_paragraph)
+        splitted_sentences = []
+        for ss in aux_splitted_sentences:
+           #if len(sp.split()) > 3:
+            splitted_sentences.append(ss)
+
+        cleaned_paragraphs.append(splitted_sentences)  # Agrego array de oraciones a array de parrafos
 
         # Split into sentences
         sentences = __split_into_sentences(nsw_paragraph)
         for s in sentences:
             # nsw_sentence = __remove_stop_words(s)
             cleaned_sentences.append(s)
-    print(cleaned_sentences)
+
+    '''
+    Loop through each cleaned paragraph, and through each sentence of it 
+    (lo dejo armado para aplicar limpieza o por si hay que hacer algo a cada oracion en particular)
+   
+    for cp in cleaned_paragraphs:
+        print('cleaned paragraph: ')
+        print(cp)
+        for cs in cp:
+            print('cleaned sentence: ')
+            print(cs)
+            
+             '''
 
     return cleaned_paragraphs, cleaned_sentences
 

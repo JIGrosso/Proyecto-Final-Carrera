@@ -56,6 +56,7 @@ def sentence_position(input_text):
         scores.append(score)
         position += 1
     print(scores)
+    print('sentence_position len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -73,10 +74,22 @@ def sentence_length(input_text):
     return scores
 
 
-def sentence_to_paragraph(input_p, input_s):
+def sentence_to_paragraph(input_p):
+
     scores = []
+
+    for paragraph in input_p:
+        for sentence in paragraph:
+            if sentence == paragraph[0]:
+                scores.append(1)
+            else:
+                scores.append(0)
+
     # Tomo un párrafo. String no dividido en oraciones.
     # Una buena solución sería tener un array de arrays para las oraciones. De esa forma es simple determinar la posición de la oración.
+
+    print(scores)
+    print('sentence_to_paragraph len(scores): ' + str(len(scores)))
 
     return 1
 
@@ -171,18 +184,24 @@ def tf_isf(input_text):
 
 
 def get_features_vector(splitted_input_data):
-
     # input_data es un dict donde cada elemento es un array de parrafos
     for text_id in splitted_input_data:
-        splitted_text = splitted_input_data[text_id]  # Array de parrafos
+        splitted_text = splitted_input_data[text_id]  # Array de parrafos de dos dimensiones
+
+        '''
+        splitted_text[0] -> array de array. Contiene array de parrafos, cada parrafo es un array de oraciones
+        splitted_text[1] -> array de oraciones, sin especificar por parrafo
+        '''
+
         # TODO Dividir en oraciones
-        get_thematic_words(splitted_input_data[text_id])
-        sentence_position(splitted_input_data[text_id])
-        sentence_length(splitted_input_data[text_id])
-        proper_nouns(splitted_input_data[text_id])
-        numerals(splitted_input_data[text_id])
-        named_entities(splitted_input_data[text_id])
-        tf_isf(splitted_input_data[text_id])
+        #get_thematic_words(splitted_input_data[text_id])
+        sentence_position(splitted_text[1])
+        #sentence_length(splitted_input_data[text_id])
+        sentence_to_paragraph(splitted_text[0])
+        #proper_nouns(splitted_input_data[text_id])
+        #numerals(splitted_input_data[text_id])
+        #named_entities(splitted_input_data[text_id])
+        #tf_isf(splitted_input_data[text_id])
 
     # Thematic words
     # get_thematic_words(sentence)
