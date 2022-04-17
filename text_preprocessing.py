@@ -60,7 +60,7 @@ def __clean_text(text):
     refined_text = refined_text.replace('Dr.', 'doctor')
     refined_text = refined_text.replace('Dra.', 'doctora')
     refined_text = refined_text.replace('Dres.', 'doctores')
-    refined_text = refined_text.replace('Dras.', 'doctores')
+    refined_text = refined_text.replace('Dras.', 'doctoras')
     refined_text = refined_text.replace('Sr.', 'señor')
     refined_text = refined_text.replace('Sra.', 'señora')
     refined_text = refined_text.replace('Sres.', 'señores')
@@ -124,6 +124,7 @@ def __clean_text(text):
     refined_text = refined_text.replace("Expte.", "Expediente")
     refined_text = refined_text.replace("Direc.", "Dirección")
     refined_text = refined_text.replace("Art.", "Artículo")
+    refined_text = refined_text.replace("Fdo.", "Firmado")
     # refined_text = refined_text.replace('\r\r\n', '')
 
 
@@ -210,27 +211,22 @@ def __split_input(text):
         for ss in aux_splitted_sentences:
            #if len(sp.split()) > 3:
             splitted_sentences.append(ss)
+            cleaned_sentences.append(ss)
 
         cleaned_paragraphs.append(splitted_sentences)  # Agrego array de oraciones a array de parrafos
-
-        # Split into sentences
-        sentences = __split_into_sentences(nsw_paragraph)
-        for s in sentences:
-            # nsw_sentence = __remove_stop_words(s)
-            cleaned_sentences.append(s)
 
     '''
     Loop through each cleaned paragraph, and through each sentence of it 
     (lo dejo armado para aplicar limpieza o por si hay que hacer algo a cada oracion en particular)
-   
+  
     for cp in cleaned_paragraphs:
-        print('cleaned paragraph: ')
-        print(cp)
+        #print('cleaned paragraph: ')
+        #print(cp)
         for cs in cp:
             print('cleaned sentence: ')
             print(cs)
-            
-             '''
+    '''
+
 
     return cleaned_paragraphs, cleaned_sentences
 

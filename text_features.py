@@ -3,8 +3,12 @@ import collections
 import math
 import nltk
 from collections import Counter
+import re
 from nltk.tokenize import sent_tokenize
 
+def __tokenize_sentence(input_sentence):
+    BAD_PUNCT_RE = re.compile(r'([%s])' % re.escape('"#%&\*\+/<=>@[\]^{|}():.,~_'), re.UNICODE)
+    return BAD_PUNCT_RE.sub('', input_sentence).split()
 
 def get_thematic_words(input_text):
     word_list = []
@@ -21,7 +25,6 @@ def get_thematic_words(input_text):
     thematic_words = []
     for word in most_common:
         thematic_words.append(str(word[0]))
-    print("Thematic words: " + thematic_words)
     # Scores
     scores = []
     for sentence in input_text:
@@ -32,7 +35,8 @@ def get_thematic_words(input_text):
         score = 1.0 * score / number_of_words
         scores.append(score)
 
-    print("Thematic words score: " + scores)
+    print(scores)
+    print('get_thematic_words len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -70,6 +74,7 @@ def sentence_length(input_text):
         scores.append(score)
 
     print(scores)
+    print('sentence_length len(scores): ' + str(len(scores)))
 
     return scores
 
@@ -110,6 +115,7 @@ def proper_nouns(input_text):
                 score += 1
         scores.append(score/float(length))
     print(scores)
+    print('proper_nouns len(scores): ' + str(len(scores)))
 
     return scores
 
@@ -132,6 +138,7 @@ def numerals(input_text):
                 score += 1
         scores.append(score/float(len(sentence_split)))
     print(scores)
+    print('numerals len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -159,28 +166,32 @@ def named_entities(input_text):
         set(entity_names)
         scores.append(len(entity_names))
 
+    print(scores)
+    print('named_entities len(scores): ' + str(len(scores)))
     return scores
 
 
 def tf_isf(input_text):
-    # TODO Eliminar caracteres especiales y palabras de menos de tres caracteres
+    # TODO Eliminar palabras de menos de tres caracteres
     scores = []
     for sentence in input_text:
         sum_tfisf = 0
         sentence_len = len(sentence.split())
-        sentence_lower = sentence.lower()
-        counts = collections.Counter(sentence_lower.split())
+
+        counts = collections.Counter(__tokenize_sentence(sentence.lower()))
         for word in counts.keys():
             count_word = 0
             for aux_sentence in input_text:
-                aux_sentence_lower = aux_sentence.lower()
-                aux_counts = collections.Counter(aux_sentence_lower.split())
+                aux_counts = collections.Counter(__tokenize_sentence(aux_sentence.lower()))
                 if word in aux_counts.keys():
                     count_word = count_word + aux_counts[word]
             sum_tfisf += counts[word] * count_word
         scores.append(math.log(sum_tfisf/sentence_len))
+
     print(scores)
+    print('tf_isf len(scores): ' + str(len(scores)))
     return scores
+
 
 
 def __get_centroid_sentence(scores_tf_isf):
@@ -192,15 +203,45 @@ def __get_centroid_sentence(scores_tf_isf):
             value = score
             position = i
         i += 1
-    print(value, position)
-    return value, position
+    return position
 
 
 def centroid_similarity(input_text, scores_tf_isf):
-    max_tf_isf, position = __get_centroid_sentence(scores_tf_isf)
+    scores = []
+    position = __get_centroid_sentence(scores_tf_isf)
+    centroid_sentence = input_text[position]
+    tokenized_centroid_sentence = __tokenize_sentence(centroid_sentence.lower())
 
+    for sentence in input_text:
+        # tokenization
+        tokenized_sentence = __tokenize_sentence(sentence.lower())
 
+        l1 = []
+        l2 = []
 
+        # form a set containing keywords of both strings
+        rvector = {}
+        rvector = set(tokenized_centroid_sentence).union(set(tokenized_sentence))
+
+        for w in rvector:
+            if w in set(tokenized_centroid_sentence):
+                l1.append(1)  # create a vector
+            else:
+                l1.append(0)
+            if w in set(tokenized_sentence):
+                l2.append(1)
+            else:
+                l2.append(0)
+        c = 0
+
+        # cosine formula
+        for i in range(len(rvector)):
+            c += l1[i] * l2[i]
+        cosine = c / float((sum(l1) * sum(l2)) ** 0.5)
+        scores.append(cosine)
+    print(scores)
+    print('centroid_similarity len(scores): ' + str(len(scores)))
+    return scores
 
 def get_features_vector(splitted_input_data):
     # input_data es un dict donde cada elemento es un array de parrafos
@@ -213,13 +254,13 @@ def get_features_vector(splitted_input_data):
         '''
 
         # TODO Dividir en oraciones
-        # get_thematic_words(splitted_input_data[text_id])
+        get_thematic_words(splitted_text[1])
         sentence_position(splitted_text[1])
-        # sentence_length(splitted_input_data[text_id])
+        sentence_length(splitted_text[1])
         sentence_to_paragraph(splitted_text[0])
-        # proper_nouns(splitted_input_data[text_id])
-        # numerals(splitted_input_data[text_id])
-        # named_entities(splitted_input_data[text_id])
+        proper_nouns(splitted_text[1])
+        numerals(splitted_text[1])
+        named_entities(splitted_text[1])
         scores_tf_isf = tf_isf(splitted_text[1])
         centroid_similarity(splitted_text[1], scores_tf_isf)
 
