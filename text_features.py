@@ -183,6 +183,25 @@ def tf_isf(input_text):
     return scores
 
 
+def __get_centroid_sentence(scores_tf_isf):
+    value = 0
+    position = 0
+    i = 0
+    for score in scores_tf_isf:
+        if score > value:
+            value = score
+            position = i
+        i += 1
+    print(value, position)
+    return value, position
+
+
+def centroid_similarity(input_text, scores_tf_isf):
+    max_tf_isf, position = __get_centroid_sentence(scores_tf_isf)
+
+
+
+
 def get_features_vector(splitted_input_data):
     # input_data es un dict donde cada elemento es un array de parrafos
     for text_id in splitted_input_data:
@@ -194,14 +213,16 @@ def get_features_vector(splitted_input_data):
         '''
 
         # TODO Dividir en oraciones
-        #get_thematic_words(splitted_input_data[text_id])
+        # get_thematic_words(splitted_input_data[text_id])
         sentence_position(splitted_text[1])
-        #sentence_length(splitted_input_data[text_id])
+        # sentence_length(splitted_input_data[text_id])
         sentence_to_paragraph(splitted_text[0])
-        #proper_nouns(splitted_input_data[text_id])
-        #numerals(splitted_input_data[text_id])
-        #named_entities(splitted_input_data[text_id])
-        #tf_isf(splitted_input_data[text_id])
+        # proper_nouns(splitted_input_data[text_id])
+        # numerals(splitted_input_data[text_id])
+        # named_entities(splitted_input_data[text_id])
+        scores_tf_isf = tf_isf(splitted_text[1])
+        centroid_similarity(splitted_text[1], scores_tf_isf)
+
 
     # Thematic words
     # get_thematic_words(sentence)
