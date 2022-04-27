@@ -17,3 +17,5 @@ Luego ejecutar:
 
     import nltk
     nltk.download()
+
+pip3 install --user --upgrade tensorflow  # install in $HOME
