@@ -6,9 +6,11 @@ from collections import Counter
 import re
 from nltk.tokenize import sent_tokenize
 
+
 def __tokenize_sentence(input_sentence):
     BAD_PUNCT_RE = re.compile(r'([%s])' % re.escape('"#%&\*\+/<=>@[\]^{|}():.,~_'), re.UNICODE)
     return BAD_PUNCT_RE.sub('', input_sentence).split()
+
 
 def get_thematic_words(input_text):
     word_list = []
@@ -193,7 +195,6 @@ def tf_isf(input_text):
     return scores
 
 
-
 def __get_centroid_sentence(scores_tf_isf):
     value = 0
     position = 0
@@ -243,9 +244,14 @@ def centroid_similarity(input_text, scores_tf_isf):
     print('centroid_similarity len(scores): ' + str(len(scores)))
     return scores
 
+
 def get_features_vector(splitted_input_data):
-    # input_data es un dict donde cada elemento es un array de parrafos
+
+    features_vector = {}
+
+    # splitted_input_data es un dict donde cada elemento es un texto del cual se extraen features
     for text_id in splitted_input_data:
+        text_scores = []
         splitted_text = splitted_input_data[text_id]  # Array de parrafos de dos dimensiones
 
         '''
@@ -253,28 +259,32 @@ def get_features_vector(splitted_input_data):
         splitted_text[1] -> array de oraciones, sin especificar por parrafo
         '''
 
-        # TODO Dividir en oraciones
-        get_thematic_words(splitted_text[1])
-        sentence_position(splitted_text[1])
-        sentence_length(splitted_text[1])
-        sentence_to_paragraph(splitted_text[0])
-        proper_nouns(splitted_text[1])
-        numerals(splitted_text[1])
-        named_entities(splitted_text[1])
+        text_scores.append(get_thematic_words(splitted_text[1]))
+        text_scores.append(sentence_position(splitted_text[1]))
+        text_scores.append(sentence_length(splitted_text[1]))
+        text_scores.append(sentence_to_paragraph(splitted_text[0]))
+        text_scores.append(proper_nouns(splitted_text[1]))
+        text_scores.append(numerals(splitted_text[1]))
+        text_scores.append(named_entities(splitted_text[1]))
         scores_tf_isf = tf_isf(splitted_text[1])
-        centroid_similarity(splitted_text[1], scores_tf_isf)
+        text_scores.append(scores_tf_isf)
+        text_scores.append(centroid_similarity(splitted_text[1], scores_tf_isf))
 
+        '''
+        text_scores[0] -> Thematic words 
+        text_scores[1] -> Sentence position
+        text_scores[2] -> Sentence length
+        text_scores[3] -> Sentence to paragraph
+        text_scores[4] -> Proper noun
+        text_scores[5] -> Numerals
+        text_scores[6] -> Named entities
+        text_scores[7] -> TF-ISF
+        text_scores[8] -> Centroid simlarity
+        '''
 
-    # Thematic words
-    # get_thematic_words(sentence)
+        features_vector[text_id] = text_scores
 
-    # Calcular Posición de las oraciones
-    # Calcular Longitud de las oraciones
-    # Calcular Posición de las oraciones respecto al párrafo que pertenecen
-    # Calcular Sustantivos Propios
-    # Calcular Mamed Entities
-    # Calcular TF ISF
-    # Calcular Sentence Similarity
+    return features_vector
 
 
 def __test():
