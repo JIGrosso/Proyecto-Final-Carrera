@@ -98,7 +98,7 @@ def sentence_to_paragraph(input_p):
     print(scores)
     print('sentence_to_paragraph len(scores): ' + str(len(scores)))
 
-    return 1
+    return scores
 
 
 def __tagger(sentence):
