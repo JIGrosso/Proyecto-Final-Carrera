@@ -4,15 +4,15 @@ import matplotlib.pyplot as plt
 def print_scores(x1, y1, y2, yL, score_type):
 
     # plotting the rouge-1 points
-    plt.plot(x1, y1, label="rouge-1", marker='o', markersize=8)
+    plt.plot(x1, y1, label="rouge-1", marker='o', markersize=5)
 
     # plotting the rouge-2 points
     x2 = x1
-    plt.plot(x2, y2, label="rouge-2", marker='o', markersize=8)
+    plt.plot(x2, y2, label="rouge-2", marker='o', markersize=5)
 
     # plotting the rouge-2 points
     xL = x1
-    plt.plot(xL, yL, label="rouge-L", marker='o', markersize=8)
+    plt.plot(xL, yL, label="rouge-L", marker='o', markersize=5)
 
     # setting y axis range
     plt.ylim(0, 1)

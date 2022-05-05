@@ -31,6 +31,6 @@ def analyze_input(filename):
     plots.print_rouge_recall(rouge_scores)
 
 
-analyze_input('dataset-spa- test3')
+analyze_input('fallos_clasificados')
 
 
