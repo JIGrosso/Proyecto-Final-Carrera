@@ -127,7 +127,6 @@ def __clean_text(text):
     refined_text = refined_text.replace("Fdo.", "Firmado")
     # refined_text = refined_text.replace('\r\r\n', '')
 
-
     # Elimina los puntos entre números. Ejemplo : 16.233 -> 16233
     refined_text = re.sub(DOT_BETWEEN_NUMBERS_re, lambda x: x.group().replace(".", ""), refined_text)
 

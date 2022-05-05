@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     print("Enhancing Text Features with Deep Learning...")
     for text_id in features_vector:
-        enhanced_features_vector = deep_learning_summarizer.improve_features(features_vector[text_id])
+        deep_learning_summarizer.summary(splitted_text[text_id], features_vector[text_id])
 
     print("Applying Summarizer...")
     # text_rank_summarizer.summary(preprocessed_text)
