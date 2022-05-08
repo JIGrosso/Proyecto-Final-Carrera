@@ -8,7 +8,7 @@ from spacy.lang.es import Spanish
 def summary(preprocessed_dataset):
 
     # Load Spanish tokenizer, tagger, parser and NER
-    nlp = spacy.load("es_core_news_lg")
+    nlp = spacy.load("es_dep_news_trf")
     nlp_sentencizer = Spanish()
 
     # Add TextRank implementation to the pipeline || add PyTextRank to the spaCy pipeline

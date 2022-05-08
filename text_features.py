@@ -188,8 +188,10 @@ def tf_isf(input_text):
                 if word in aux_counts.keys():
                     count_word = count_word + aux_counts[word]
             sum_tfisf += counts[word] * count_word
-        scores.append(math.log(sum_tfisf/sentence_len))
-
+        try:
+            scores.append(math.log(sum_tfisf/sentence_len))
+        except:
+            scores.append(0)
     print(scores)
     print('tf_isf len(scores): ' + str(len(scores)))
     return scores
@@ -238,8 +240,11 @@ def centroid_similarity(input_text, scores_tf_isf):
         # cosine formula
         for i in range(len(rvector)):
             c += l1[i] * l2[i]
-        cosine = c / float((sum(l1) * sum(l2)) ** 0.5)
-        scores.append(cosine)
+        try:
+            cosine = c / float((sum(l1) * sum(l2)) ** 0.5)
+            scores.append(cosine)
+        except:
+            scores.append(0)
     print(scores)
     print('centroid_similarity len(scores): ' + str(len(scores)))
     return scores

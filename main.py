@@ -29,13 +29,13 @@ if __name__ == "__main__":
     for text_id in features_vector:
         deep_learning_summarizer.summary(splitted_text[text_id], features_vector[text_id])
 
-    print("Applying Summarizer...")
+    # print("Applying Summarizer...")
     # text_rank_summarizer.summary(preprocessed_text)
-
-    print("Calculating ROUGE metrics...")
+    #
+    # print("Calculating ROUGE metrics...")
     # rouge_scores_data = rouge_script.get_rouge_scores()
 
-    print("Printing ROUGE metrics...")
+    # print("Printing ROUGE metrics...")
     # plots.print_rouge_recall(rouge_scores_data)
     # plots.print_rouge_precision(rouge_scores_data)
     # plots.print_rouge_f1_score(rouge_scores_data)

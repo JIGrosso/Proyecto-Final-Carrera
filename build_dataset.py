@@ -5,14 +5,16 @@ import pandas
 dataset = {'lines': []}
 lines = []
 
-for i in range(0, 1000):
+for i in range(0, 100):
     text_id = randint(309, 15000)
     try:
         with open('./dataset/fallos_clasificados/' + str(text_id) + '.json', 'r', encoding='utf8') as file:
             fallo = json.load(file)
-        text_line = {'bill_id': fallo['id_fallo'],
-                    'text': fallo['texto_fallos'],
-                    'summary': fallo['texto_sumario']}
+        text_line = {
+                     'bill_id': fallo['id_fallo'],
+                     'text': fallo['texto_fallos'],
+                     'summary': fallo['texto_sumario']
+                    }
         lines.append(text_line)
     except:
         print('El archivo ' + str(text_id) + '.json no existe')
