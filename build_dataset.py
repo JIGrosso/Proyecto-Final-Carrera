@@ -5,7 +5,7 @@ import pandas
 dataset = {'lines': []}
 lines = []
 
-for i in range(0, 100):
+for i in range(0, 16000):
     text_id = randint(309, 15000)
     try:
         with open('./dataset/fallos_clasificados/' + str(text_id) + '.json', 'r', encoding='utf8') as file:

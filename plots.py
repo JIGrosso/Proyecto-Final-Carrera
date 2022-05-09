@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def print_scores(x1, y1, y2, yL, score_type):
@@ -10,7 +11,7 @@ def print_scores(x1, y1, y2, yL, score_type):
     x2 = x1
     plt.plot(x2, y2, label="rouge-2", marker='o', markersize=5)
 
-    # plotting the rouge-2 points
+    # plotting the rouge-L points
     xL = x1
     plt.plot(xL, yL, label="rouge-L", marker='o', markersize=5)
 
@@ -18,9 +19,9 @@ def print_scores(x1, y1, y2, yL, score_type):
     plt.ylim(0, 1)
 
     # naming the x axis
-    plt.xlabel('rouge score')
+    plt.xlabel('document number')
     # naming the y axis
-    plt.ylabel('document number')
+    plt.ylabel('rouge score')
 
     # giving a title to my graph
     plt.title('ROUGE '+score_type+' Scores')
@@ -29,6 +30,26 @@ def print_scores(x1, y1, y2, yL, score_type):
     plt.legend()
 
     # function to show the plot
+    plt.show()
+
+
+def scatter_scores(x1, y1, y2, yL, score_type):
+
+    fig, ax = plt.subplots()
+
+    sizes = np.random.uniform(15, 80, len(x1))
+    colors = np.random.uniform(15, 80, len(x1))
+
+    ax.scatter(x1, yL, s=sizes, c=colors)
+
+    # naming the x axis
+    plt.xlabel('document number')
+    # naming the y axis
+    plt.ylabel('rouge score')
+
+    # giving a title to my graph
+    plt.title('ROUGE ' + score_type + ' Scores')
+
     plt.show()
 
 
@@ -50,6 +71,7 @@ def print_rouge_recall(scores):
         x_index += 1
 
     print_scores(x1, y1, y2, yL, 'Recall')
+    scatter_scores(x1, y1, y2, yL, 'Recall')
 
 
 def print_rouge_precision(scores):
