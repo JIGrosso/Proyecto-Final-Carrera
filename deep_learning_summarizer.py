@@ -46,5 +46,7 @@ def __test():
     # Hidden layer: 3 nodes
     # Learning rate: 0,1 to 100
     rbm = RBM(4, 3, 0.1, 100)
-    temp = rbm.train(test)
-    print(temp)
+    rbm.train(test)
+
+
+__test()
