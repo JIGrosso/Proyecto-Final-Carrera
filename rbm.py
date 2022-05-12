@@ -42,3 +42,11 @@ class RBM():
         self.W += torch.mm(v0.t(), ph0) - torch.mm(vk.t(), phk)
         self.b += torch.sum((v0 - vk), 0)
         self.a += torch.sum((ph0 - phk), 0)
+
+
+"""
+nv = len(training_set[0])
+nh = 100
+batch_size = 100
+rbm = RBM(nv, nh)
+"""
