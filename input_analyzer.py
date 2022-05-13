@@ -31,6 +31,11 @@ def analyze_input(filename):
     plots.print_rouge_recall(rouge_scores)
 
 
-analyze_input('fallos_clasificados')
+def main():
+    analyze_input('fallos_clasificados')
+
+
+if __name__ == "__main__":
+    main()
 
 

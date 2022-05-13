@@ -8,8 +8,8 @@ import text_rank_summarizer
 import rouge_script
 import plots
 
-if __name__ == "__main__":
 
+def main():
     # Argumentos del main
     parser = argparse.ArgumentParser(description='Parser for PyTextRank parameters')
     parser.add_argument('--filename', metavar='path', required=True, help='the name of the input file')
@@ -41,3 +41,7 @@ if __name__ == "__main__":
     # plots.print_rouge_f1_score(rouge_scores_data)
 
     print("Process finished...")
+
+
+if __name__ == "__main__":
+    main()
