@@ -22,23 +22,23 @@ def main():
     print("Preprocessing Text...")
     preprocessed_text, splitted_text = text_preprocessing.process(dataset)
 
-    print("Getting Text Features...")
-    features_vector = text_features.get_features_vector(splitted_text)
-
-    print("Enhancing Text Features with Deep Learning...")
-    for text_id in features_vector:
-        deep_learning_summarizer.summary(splitted_text[text_id], features_vector[text_id])
-
-    # print("Applying Summarizer...")
-    # text_rank_summarizer.summary(preprocessed_text)
+    # print("Getting Text Features...")
+    # features_vector = text_features.get_features_vector(splitted_text)
     #
-    # print("Calculating ROUGE metrics...")
-    # rouge_scores_data = rouge_script.get_rouge_scores()
+    # print("Enhancing Text Features with Deep Learning...")
+    # for text_id in features_vector:
+    #     deep_learning_summarizer.summary(splitted_text[text_id], features_vector[text_id])
 
-    # print("Printing ROUGE metrics...")
-    # plots.print_rouge_recall(rouge_scores_data)
-    # plots.print_rouge_precision(rouge_scores_data)
-    # plots.print_rouge_f1_score(rouge_scores_data)
+    print("Applying Summarizer...")
+    text_rank_summarizer.summary(preprocessed_text)
+
+    print("Calculating ROUGE metrics...")
+    rouge_scores_data = rouge_script.get_rouge_scores()
+
+    print("Printing ROUGE metrics...")
+    plots.print_rouge_recall(rouge_scores_data)
+    plots.print_rouge_precision(rouge_scores_data)
+    plots.print_rouge_f1_score(rouge_scores_data)
 
     print("Process finished...")
 

@@ -160,13 +160,14 @@ def named_entities(input_text):
     # TODO Continuar con este feature. Las NE que reconoce son erroneas. Creo que puede ser debido al idioma. Probar con el NE Recognition de Spacy.
     scores = []
     for sentence in input_text:
+        length = len(sentence.split())
         tagged_sentence = __tagger(sentence)
         chunked_sentence = nltk.ne_chunk(tagged_sentence, binary=True)
         entity_names = []
         for c in chunked_sentence:
             entity_names.extend(__extract_named_entities(c))
         set(entity_names)
-        scores.append(len(entity_names))
+        scores.append(len(entity_names)/float(length))
 
     print(scores)
     print('named_entities len(scores): ' + str(len(scores)))
