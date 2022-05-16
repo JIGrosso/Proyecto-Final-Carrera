@@ -199,16 +199,17 @@ def __split_input(text):
     cleaned_paragraphs = []
     cleaned_sentences = []
     for p in paragraphs:
-       # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
+        # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
         cleaned_paragraph = __clean_text(p)
         nsw_paragraph = __remove_stop_words(cleaned_paragraph)
-
-       # Loop para chequear que oraciones sean mayor a 3 palabras, y pasarlas a un arreglo que luego se hace append a cleaned_paragrahps
+        # nsw_paragraph = cleaned_paragraph
+        # Loop para chequear que oraciones sean mayor a 3 palabras, y pasarlas a un arreglo que luego se hace append a cleaned_paragrahps
 
         aux_splitted_sentences = __split_into_sentences(nsw_paragraph)
         splitted_sentences = []
+
         for ss in aux_splitted_sentences:
-           #if len(sp.split()) > 3:
+            # if len(sp.split()) > 3:
             splitted_sentences.append(ss)
             cleaned_sentences.append(ss)
 
@@ -225,7 +226,6 @@ def __split_input(text):
             print('cleaned sentence: ')
             print(cs)
     '''
-
 
     return cleaned_paragraphs, cleaned_sentences
 

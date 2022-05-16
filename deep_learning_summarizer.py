@@ -3,8 +3,12 @@ import numpy as np
 import rbm
 
 
-def __sort_features():
-    return 1
+def prepare_dataset(features):
+    features_np = np.array(features)
+    for element in features_np:
+        print(element[0]) # Scores de la primer oración
+
+    return features_np
 
 
 # Input: Array de features
@@ -31,6 +35,7 @@ def improve_features(text_features):
 
 
 def summary(text, features):
+    prepare_dataset(features)
     n = 0
     for (sentence_position, score) in improve_features(features):
         if n < 5:
