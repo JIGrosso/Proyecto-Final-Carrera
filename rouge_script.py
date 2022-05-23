@@ -16,12 +16,10 @@ def get_rouge_scores(target='targets', output='spacy_summaries'):
     with open('./outputs/' + target + '.json', encoding='utf8') as json_file:
         targets = json.load(json_file)
     with open('./outputs/' + output + '.json', encoding='utf8') as json_file:
-        spacy_outputs = json.load(json_file)
-    # targets = pd.read_json('./outputs/targets.json')
-    # spacy_outputs = pd.read_json('./outputs/spacy_summaries.json')
+        outputs = json.load(json_file)
 
-    for text_id in spacy_outputs:
-        scores = rouge.get_scores(targets[text_id], spacy_outputs[text_id])
+    for text_id in outputs:
+        scores = rouge.get_scores(targets[text_id], outputs[text_id])
         scores_response[text_id] = scores
 
     return scores_response

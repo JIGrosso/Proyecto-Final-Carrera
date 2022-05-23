@@ -35,12 +35,10 @@ def print_scores(x1, y1, y2, yL, score_type):
 
 def scatter_scores(x1, y1, y2, yL, score_type):
 
-    fig, ax = plt.subplots()
-
-    sizes = np.random.uniform(15, 80, len(x1))
+    sizes = np.random.uniform(30, 30, len(x1))
     colors = np.random.uniform(15, 80, len(x1))
 
-    ax.scatter(x1, yL, s=sizes, c=colors)
+    plt.scatter(x1, yL, s=sizes, c=colors)
 
     # naming the x axis
     plt.xlabel('document number')
@@ -65,12 +63,12 @@ def print_rouge_recall(scores):
         # x axis values
         x1.append(x_index)
         # corresponding y axis values
-        y1.append(scores[text_id][0]['rouge-1']['r'])
-        y2.append(scores[text_id][0]['rouge-2']['r'])
+        # y1.append(scores[text_id][0]['rouge-1']['r'])
+        # y2.append(scores[text_id][0]['rouge-2']['r'])
         yL.append(scores[text_id][0]['rouge-l']['r'])
         x_index += 1
 
-    print_scores(x1, y1, y2, yL, 'Recall')
+    # print_scores(x1, y1, y2, yL, 'Recall')
     scatter_scores(x1, y1, y2, yL, 'Recall')
 
 

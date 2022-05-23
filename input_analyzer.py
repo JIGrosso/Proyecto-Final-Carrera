@@ -32,7 +32,7 @@ def analyze_input(filename):
 
 
 def main():
-    analyze_input('fallos_clasificados')
+    analyze_input('test_input_dataset')
 
 
 if __name__ == "__main__":
