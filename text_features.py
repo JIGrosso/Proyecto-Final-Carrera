@@ -37,8 +37,8 @@ def get_thematic_words(input_text):
         score = 1.0 * score / number_of_words
         scores.append(score)
 
-    print(scores)
-    print('get_thematic_words len(scores): ' + str(len(scores)))
+    # print(scores)
+    # print('get_thematic_words len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -61,8 +61,8 @@ def sentence_position(input_text):
             score = math.cos((position - min_var) * ((1 / max_var) - min_var))
         scores.append(score)
         position += 1
-    print(scores)
-    print('sentence_position len(scores): ' + str(len(scores)))
+    # print(scores)
+    # print('sentence_position len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -75,9 +75,8 @@ def sentence_length(input_text):
             score = length
         scores.append(score)
 
-    print(scores)
-    print('sentence_length len(scores): ' + str(len(scores)))
-
+    # print(scores)
+    # print('sentence_length len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -95,14 +94,12 @@ def sentence_to_paragraph(input_p):
     # Tomo un párrafo. String no dividido en oraciones.
     # Una buena solución sería tener un array de arrays para las oraciones. De esa forma es simple determinar la posición de la oración.
 
-    print(scores)
-    print('sentence_to_paragraph len(scores): ' + str(len(scores)))
-
+    # print(scores)
+    # print('sentence_to_paragraph len(scores): ' + str(len(scores)))
     return scores
 
 
 def __tagger(sentence):
-
     return nltk.pos_tag(sentence.split())
 
 
@@ -116,9 +113,9 @@ def proper_nouns(input_text):
             if tag[1] == "NNP" or tag[1] == "NNPS":
                 score += 1
         scores.append(score/float(length))
-    print(scores)
-    print('proper_nouns len(scores): ' + str(len(scores)))
 
+    # print(scores)
+    # print('proper_nouns len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -139,8 +136,9 @@ def numerals(input_text):
             if __is_number(word):
                 score += 1
         scores.append(score/float(len(sentence_split)))
-    print(scores)
-    print('numerals len(scores): ' + str(len(scores)))
+
+    # print(scores)
+    # print('numerals len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -169,8 +167,8 @@ def named_entities(input_text):
         set(entity_names)
         scores.append(len(entity_names)/float(length))
 
-    print(scores)
-    print('named_entities len(scores): ' + str(len(scores)))
+    # print(scores)
+    # print('named_entities len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -193,8 +191,9 @@ def tf_isf(input_text):
             scores.append(math.log(sum_tfisf/sentence_len))
         except:
             scores.append(0)
-    print(scores)
-    print('tf_isf len(scores): ' + str(len(scores)))
+
+    # print(scores)
+    # print('tf_isf len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -207,6 +206,7 @@ def __get_centroid_sentence(scores_tf_isf):
             value = score
             position = i
         i += 1
+
     return position
 
 
@@ -246,8 +246,9 @@ def centroid_similarity(input_text, scores_tf_isf):
             scores.append(cosine)
         except:
             scores.append(0)
-    print(scores)
-    print('centroid_similarity len(scores): ' + str(len(scores)))
+
+    # print(scores)
+    # print('centroid_similarity len(scores): ' + str(len(scores)))
     return scores
 
 
@@ -263,6 +264,7 @@ def get_features_vector(splitted_input_data):
         '''
         splitted_text[0] -> array de array. Contiene array de parrafos, cada parrafo es un array de oraciones
         splitted_text[1] -> array de oraciones, sin especificar por parrafo
+        splitted_text[2] -> array de oraciones, sin especificar por parrafo, con stop-words incluidas
         '''
 
         text_scores.append(get_thematic_words(splitted_text[1]))

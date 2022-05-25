@@ -1,6 +1,8 @@
-from rbmtf import RBM
+# from rbmtf import RBM
+# import rbm
+import json
+
 import numpy as np
-import rbm
 
 
 def prepare_dataset(features):
@@ -35,23 +37,43 @@ def improve_features(text_features):
 
 
 def summary(text, features):
-    prepare_dataset(features)
+
+    # prepare_dataset(features)
+
+    text_summary = ''
     n = 0
     for (sentence_position, score) in improve_features(features):
-        if n < 5:
-            print(int(sentence_position) - 1)
-            print(text[1][int(sentence_position) - 1])
+        if n < 3:
+            # print(int(sentence_position) - 1)
+            sentence = text[2][int(sentence_position) - 1]
+            print(sentence)
+            text_summary = text_summary + sentence + "\n"
         n += 1
-    return "Éxito"
+
+    return text_summary
 
 
-def __test():
-    test = np.array([[0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 1, 1]])
+def generate_summaries(dataset, features_vector):
+
+    summaries = {}
+
+    for text_id in dataset:
+        summaries[text_id] = summary(dataset[text_id], features_vector[text_id])
+
+    with open('./outputs/tf_dl_summaries.json', 'w', encoding='utf8') as outfile:
+        json.dump(summaries, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+
+    print("Sumarios generados con éxito!")
+
+    return True
+
+# def __test():
+    # test = np.array([[0, 1, 1, 0], [0, 1, 0, 0], [0, 0, 1, 1]])
     # Visible layer: 4 nodes
     # Hidden layer: 3 nodes
     # Learning rate: 0,1 to 100
-    rbm = RBM(4, 3, 0.1, 100)
-    rbm.train(test)
+    # rbm = RBM(4, 3, 0.1, 100)
+    # rbm.train(test)
 
 
-__test()
+# __test()
