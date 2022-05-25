@@ -4,11 +4,10 @@ import pytextrank
 from spacy.lang.es import Spanish
 
 
-# SUMMARIZATION
 def summary(preprocessed_dataset):
 
     # Load Spanish tokenizer, tagger, parser and NER
-    nlp = spacy.load("es_core_news_lg")
+    nlp = spacy.load("es_dep_news_trf")
     nlp_sentencizer = Spanish()
 
     # Add TextRank implementation to the pipeline || add PyTextRank to the spaCy pipeline
@@ -28,7 +27,7 @@ def summary(preprocessed_dataset):
         doc = nlp(input_line)  # Spacy process. Aqui se genera el sumario entre otras funcionalidades que ofrece el pipeline de Spacy.
         # doc._.texrank.summary genera el sumario a partir de la info generada en 'doc'.
         # Basicamente summary toma las frases que TextRank considera mas relevantes y las une en un solo objeto.
-        for sentence in doc._.textrank.summary(limit_phrases=15, limit_sentences=5):
+        for sentence in doc._.textrank.summary(limit_phrases=10, limit_sentences=4):
             aux_sentences = aux_sentences + str(sentence) + '\n'
             # TODO Tratar de obtener puntuación para oración
             # print(sentence)
@@ -36,8 +35,10 @@ def summary(preprocessed_dataset):
         summaries[text_id] = aux_sentences
         # outputs.append(nlp_sentencizer(aux_sentences))  # Transformamos el sumario en oraciones.
 
+    with open('./outputs/text_rank_summaries.json', 'w', encoding='utf8') as outfile:
+        json.dump(summaries, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+
     print("Sumarios generados con éxito!")
 
-    with open('./outputs/spacy_summaries.json', 'w', encoding='utf8') as outfile:
-        json.dump(summaries, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+    return True
 

@@ -120,11 +120,12 @@ def __clean_text(text):
 
 
 def __remove_stop_words(input_text):
-
+    # We only want to work with lowercase for the comparisons
+    # text = input_text.lower()
     text = input_text  # Utilizar mayúsculas hace que el PoS de mejores resultados.
 
     # remove punctuation and split into seperate words
-    # words = re.findall(r'\w+', text, flags=re.UNICODE)  # | re.LOCALE)
+    words = re.findall(r'\w+', text, flags=re.UNICODE)  # | re.LOCALE)
 
     # split into separate words with punctuation
     words = text.split()
@@ -140,13 +141,15 @@ def __remove_stop_words(input_text):
 
     return nsw_text.join(important_words)
 
+    # This is the more pythonic way
+    # important_words = filter(lambda x: x not in stopwords.words('spanish'), words)
+
 
 def __split_input(paragraphs):
-    """
+    '''
         Divide el input en párrafos haciendo uso de "/r/r/n".
         Luego limpia con __clean_text() cada division.
-    """
-
+    '''
     # Split en parrafos
     # Idea:
     # if "\r\r\n" in text:
@@ -195,7 +198,7 @@ def process(dataset):
     lenght = len(index)  # Longitud del dataset
     print("Cantidad de documentos legales: " + str(lenght))
 
-    # Itero sobre el Dataset
+    # Itero sobre el Dataset y lo fragmento
     for x in range(lenght):
         json_line = dataset.at[x, 'lines']  # Leo cada JSON LINE
 
@@ -229,9 +232,8 @@ def process(dataset):
         # En nsw_paragraphs_into_sentences tenemos un array de párrafos, donde cada uno es un array de oraciones sin stop words
         # En nsw_sentences tenemos todas las oraciones sin stop words, sin dividir en párrafos
 
-        splitted_text.append(nsw_paragraphs_into_sentences)
-        splitted_text.append(nsw_sentences)
-        splitted_text.append(original_sentences)
+        splitted_text[0] = nsw_paragraphs_into_sentences
+        splitted_text[1] = nsw_sentences
 
         # Actualizo el Dict con los inputs preprocesados
         input_data[json_line['bill_id']] = cleaned_text

@@ -3,6 +3,8 @@ Este repositorio contiene todas las herramientas utilizadas y desarrolladas para
 
 pip install spacy
 
+pip install -U spacy
+
 pip install pytextrank
 
 spacy download es_core_news_lg
@@ -17,3 +19,5 @@ Luego ejecutar:
 
     import nltk
     nltk.download()
+
+pip3 install --user --upgrade tensorflow  # install in $HOME
