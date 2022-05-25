@@ -3,10 +3,9 @@
 import pandas as pd
 import json
 from rouge import Rouge
-from rouge import FilesRouge
 
 
-def get_rouge_scores(target='targets', output='outputs'):
+def get_rouge_scores(target='targets', output='outputs', persist=False):
     """
     target: Nombre del archivo que contiene los targets
     output: Nombre del archivo que contiene los outputs
@@ -24,6 +23,12 @@ def get_rouge_scores(target='targets', output='outputs'):
     for text_id in outputs:
         scores = rouge.get_scores(outputs[text_id], targets[text_id])
         scores_response[text_id] = scores
+
+    if persist:
+        # Persistir scores
+        dump_path = './outputs/' + output + '_rouge_scores.json'
+        with open(dump_path, 'w', encoding='utf8') as outfile:
+            json.dump(scores_response, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 
     return scores_response
 
