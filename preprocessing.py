@@ -160,11 +160,14 @@ def __split_input(paragraphs):
     paragraphs_into_sentences = []  # Cada elemento de este array es un array de oraciones.
     original_sentences = []  # Cada elemento de este array es una oracion que no se le quitaran las SW.
 
+
     for p in paragraphs:
         aux_splitted_sentences = sent_tokenize(p)
+        sentences = [] ## Inicializa vacío, se insertan todas las oraciones del párrafo, y luego se se inserta en array de párrafos
 
         for ss in aux_splitted_sentences:
             original_sentences.append(ss)
+            sentences.append(ss)
 
         paragraphs_into_sentences.append(sentences)  # Agrego array de oraciones a array de parrafos
 
@@ -213,9 +216,25 @@ def process(dataset):
 
         paragraphs_into_sentences, original_sentences = __split_input(cleaned_paragraphs)
 
+        nsw_paragraphs_into_sentences = []
+        nsw_sentences = []
+
+        for cp in paragraphs_into_sentences: # Recorro cada array de arrays
+            aux_nsw_cp = [] # Auxiliar vacío para armar parrafos
+
+            for cs in cp: # Recorro cada elemento (oracion) del array
+                nsw_cs = __remove_stop_words(cs) # Elimino stop words
+                nsw_sentences.append(nsw_cs) # Almaceno oraciones sin stop words
+                aux_nsw_cp.append(nsw_cs)  # Armo parrafo de oraciones sin stop words
+
+            nsw_paragraphs_into_sentences.append(aux_nsw_cp) #Almaceno parrafos con oraciones sin stop words
+
+        # Al terminar el for anidado, en nsw_paragraphs_into_sentences tenemos un array de párrafos, donde cada uno es un array de oraciones sin stop words
+        # En nsw_sentences tenemos todas las oraciones sin stop words, sin dividir en párrafos
 
 
         # 3er paso B: Remover SWs y armar los 2 arrays(Array de arrays de oraciones (paragrphs into sentences), Array de oraciones) (solo para TF)
+
         # Actualizo el Dict con los inputs preprocesados
         input_data[json_line['bill_id']] = cleaned_text
         # splitted_input_data[json_line['bill_id']] = splitted_text
