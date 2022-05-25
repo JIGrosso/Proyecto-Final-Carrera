@@ -37,6 +37,7 @@ def main():
     TextFeatures = deep_learning_summarizer.generate_summaries(splitted_text, features_vector)
 
     print("Calculating ROUGE metrics...")
+    # Enviar parametro persist=True si se quieren persistir los scores
     if TextRank:
         rouge_scores_data = rouge_script.get_rouge_scores(target='targets', output='text_rank_summaries')
 
