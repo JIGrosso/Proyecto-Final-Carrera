@@ -5,7 +5,6 @@ import pandas as pd
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 
-
 # Definición de Expresiones Regulares
 # Esto permite que sean utilizadas mas tarde con otros métodos de RE.
 # fs. 227/233 -> fojas 227/233 -> hojas de un expediente. También puede ser fs. vto.
@@ -25,7 +24,6 @@ FIX_START_re = re.compile('^[^A-Za-z]*')
 
 
 def __clean_text(text):
-
     refined_text = text
 
     # Documentos Legales Argentina
@@ -64,7 +62,7 @@ def __clean_text(text):
     refined_text = refined_text.replace("C. N.", "Código Nacional")
     refined_text = refined_text.replace("C.N.", "Código Nacional")
     refined_text = refined_text.replace("Civ.", "Civil")
-    refined_text = refined_text.replace("L.O.", "Ley Orgánica") #chequear esta
+    refined_text = refined_text.replace("L.O.", "Ley Orgánica")  # chequear esta
     refined_text = refined_text.replace("Nro.", "Número")
     refined_text = refined_text.replace("cctes.", "consecuentes")
     refined_text = refined_text.replace("D.L.", "Decreto Ley")
@@ -98,7 +96,6 @@ def __clean_text(text):
     refined_text = refined_text.replace("Direc.", "Dirección")
     refined_text = refined_text.replace("Art.", "Artículo")
     refined_text = refined_text.replace("Fdo.", "Firmado")
-    # refined_text = refined_text.replace('\r\r\n', '')
 
     # Elimina los puntos entre números. Ejemplo : 16.233 -> 16233
     refined_text = re.sub(DOT_BETWEEN_NUMBERS_re, lambda x: x.group().replace(".", ""), refined_text)
@@ -123,7 +120,6 @@ def __clean_text(text):
 
 
 def __remove_stop_words(input_text):
-
     # We only want to work with lowercase for the comparisons
     # text = input_text.lower()
     text = input_text  # Utilizar mayúsculas hace que el PoS de mejores resultados.
@@ -149,11 +145,7 @@ def __remove_stop_words(input_text):
     # important_words = filter(lambda x: x not in stopwords.words('spanish'), words)
 
 
-def __split_into_sentences(paragraph):
-    return sent_tokenize(paragraph)
-
-
-def __split_input(text):
+def __split_input(paragraphs):
     '''
         Divide el input en párrafos haciendo uso de "/r/r/n".
         Luego limpia con __clean_text() cada division.
@@ -165,30 +157,21 @@ def __split_input(text):
     # else:
     #     paragraphs = text.split("\n")
 
-    paragraphs = text.split("\r\r\n")
-    cleaned_paragraphs = []  # Cada elemento de este array es un parrafo. Y a su vez, cada parrafo es un array de oraciones
-    cleaned_sentences = []   # Cada elemento de este array es una oracion.
-    for p in paragraphs:
-        # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
-        cleaned_paragraph = __clean_text(p)
-        nsw_paragraph = __remove_stop_words(cleaned_paragraph)
-        # nsw_paragraph = cleaned_paragraph
-        # Loop para chequear que oraciones sean mayor a 3 palabras, y pasarlas a un arreglo que luego se hace append a cleaned_paragrahps
+    paragraphs_into_sentences = []  # Cada elemento de este array es un array de oraciones.
+    original_sentences = []  # Cada elemento de este array es una oracion que no se le quitaran las SW.
 
-        aux_splitted_sentences = __split_into_sentences(nsw_paragraph)
-        splitted_sentences = []
+    for p in paragraphs:
+        aux_splitted_sentences = sent_tokenize(p)
 
         for ss in aux_splitted_sentences:
-            # if len(sp.split()) > 3:
-            splitted_sentences.append(ss)
-            cleaned_sentences.append(ss)
+            original_sentences.append(ss)
 
-        cleaned_paragraphs.append(splitted_sentences)  # Agrego array de oraciones a array de parrafos
+        paragraphs_into_sentences.append(sentences)  # Agrego array de oraciones a array de parrafos
 
     '''
     Loop through each cleaned paragraph, and through each sentence of it 
     (lo dejo armado para aplicar limpieza o por si hay que hacer algo a cada oracion en particular)
-  
+
     for cp in cleaned_paragraphs:
         #print('cleaned paragraph: ')
         #print(cp)
@@ -197,11 +180,10 @@ def __split_input(text):
             print(cs)
     '''
 
-    return cleaned_paragraphs, cleaned_sentences
+    return paragraphs_into_sentences, original_sentences
 
 
 def process(dataset):
-
     # Me sirve para ver la estructura del dataset - returns Panda's object
     # dataset = pd.read_json('./dataset/'+args.filename+'.json')
 
@@ -220,12 +202,23 @@ def process(dataset):
 
         target_data[json_line['bill_id']] = json_line['summary']  # Agrego el TARGET al Dict
 
-        splitted_text = __split_input(json_line['text'])
-        cleaned_text = __clean_text(json_line['text'])
+        paragraphs = json_line['text'].split("\r\r\n")
+        cleaned_paragraphs = []
+        cleaned_text = ''  # Input para TextRank
 
+        for p in paragraphs:
+            # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
+            cleaned_paragraphs.append(__clean_text(p))
+            cleaned_text = cleaned_text + p + "\n"
+
+        paragraphs_into_sentences, original_sentences = __split_input(cleaned_paragraphs)
+
+
+
+        # 3er paso B: Remover SWs y armar los 2 arrays(Array de arrays de oraciones (paragrphs into sentences), Array de oraciones) (solo para TF)
         # Actualizo el Dict con los inputs preprocesados
         input_data[json_line['bill_id']] = cleaned_text
-        splitted_input_data[json_line['bill_id']] = splitted_text
+        # splitted_input_data[json_line['bill_id']] = splitted_text
 
     # Guardado
     with open('./outputs/preprocessed_input.json', 'w', encoding='utf8') as outfile:
@@ -239,7 +232,6 @@ def process(dataset):
 
 
 def __test():
-
     pattern = r"\b[0-9]{1,2}(?:\.[0-9]{3})+\b"
 
     numbers = [
@@ -251,7 +243,6 @@ def __test():
 
     for s in numbers:
         print(re.sub(pattern, lambda x: x.group().replace(".", ""), s))
-
 
 # __remove_stop_words('test')
 # __test()
