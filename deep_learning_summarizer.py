@@ -1,5 +1,4 @@
-# from rbmtf import RBM
-# import rbm
+import rbm
 import json
 
 import numpy as np
@@ -7,14 +6,16 @@ import numpy as np
 
 def prepare_dataset(features):
     features_np = np.array(features)
-    for element in features_np:
-        print(element[0]) # Scores de la primer oración
-
+    """
+        Size features_np: 9 x CantidadOraciones
+    """
     return features_np
 
 
 # Input: Array de features
 def improve_features(text_features):
+
+    # Llamada a método de la rbm
 
     # Sum features
     global_scores = {}
@@ -38,7 +39,7 @@ def improve_features(text_features):
 
 def summary(text, features):
 
-    # prepare_dataset(features)
+    prepare_dataset(features)
 
     text_summary = ''
     n = 0
