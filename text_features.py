@@ -68,11 +68,20 @@ def sentence_position(input_text):
 
 def sentence_length(input_text):
     scores = []
+    word_list = []
+
+    for sentence in input_text:
+        for w in sentence.split():
+            word_list.append(w)
+
+    counts = Counter(word_list)
+    number_of_words = len(counts)
+
     for sentence in input_text:
         score = 0
         length = len(sentence.split())
         if length > 3:
-            score = length
+            score = length/number_of_words
         scores.append(score)
 
     # print(scores)
@@ -90,9 +99,6 @@ def sentence_to_paragraph(input_p):
                 scores.append(1)
             else:
                 scores.append(0)
-
-    # Tomo un párrafo. String no dividido en oraciones.
-    # Una buena solución sería tener un array de arrays para las oraciones. De esa forma es simple determinar la posición de la oración.
 
     # print(scores)
     # print('sentence_to_paragraph len(scores): ' + str(len(scores)))

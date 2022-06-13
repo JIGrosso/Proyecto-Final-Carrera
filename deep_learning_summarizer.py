@@ -7,9 +7,21 @@ import numpy as np
 def prepare_dataset(features):
     features_np = np.array(features)
     """
+        Peliculas -> Features
+        Usuarios -> Oraciones
+        Puntuaciones -> Scores
+        
         Size features_np: 9 x CantidadOraciones
+        
+        Columnas -> Features
+        Filas -> Oraciones
+        Celdas -> Scores
+        
     """
-    return features_np
+
+    test_set = np.transpose(features_np)
+
+    return test_set
 
 
 # Input: Array de features
@@ -39,7 +51,8 @@ def improve_features(text_features):
 
 def summary(text, features):
 
-    prepare_dataset(features)
+    rbm.train_rbm(prepare_dataset(features))
+    rbm.enhance_scores(prepare_dataset(features))
 
     text_summary = ''
     n = 0
