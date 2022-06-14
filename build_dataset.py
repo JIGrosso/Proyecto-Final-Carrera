@@ -25,7 +25,7 @@ def main():
                 print('El archivo ' + str(text_id) + '.json no existe')
             read.append(text_id)
         # Setear la cantidad de fallos a leer.
-        if counts == 10000:
+        if counts == 100:
             break
     dataset['lines'] = lines
     # Guardado - Setear el nombre del archivo en donde se van a almacenar

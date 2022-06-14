@@ -28,21 +28,23 @@ def prepare_dataset(features):
 def improve_features(text_features):
 
     # Llamada a método de la rbm
+    enhanced_features = rbm.enhance_scores(prepare_dataset(text_features))
 
     # Sum features
     global_scores = {}
     # Flag
-    feature_position = 0
-    for feature in text_features:
-        sentence_position = 1
-        for score in feature:
+    sentence_position = 1
+    for sentence in text_features:
+        feature_position = 0
+        for feature_score in sentence:
             # Initialize Dict
             if feature_position == 0:
-                global_scores[str(sentence_position)] = 0
-            global_scores[str(sentence_position)] = global_scores[str(sentence_position)] + score
-            sentence_position += 1
+                global_scores[str(sentence_position)] = feature_score
+            else:
+                global_scores[str(sentence_position)] = global_scores[str(sentence_position)] + feature_score
+            feature_position += 1
         # Update Flag
-        feature_position = 1
+        sentence_position += 1
     # print(global_scores)
 
     # Sort Global Scores
@@ -51,16 +53,13 @@ def improve_features(text_features):
 
 def summary(text, features):
 
-    rbm.train_rbm(prepare_dataset(features))
-    rbm.enhance_scores(prepare_dataset(features))
-
     text_summary = ''
     n = 0
     for (sentence_position, score) in improve_features(features):
-        if n < 3:
+        if n < 5:
             # print(int(sentence_position) - 1)
             sentence = text[2][int(sentence_position) - 1]
-            print(sentence)
+            # print(sentence)
             text_summary = text_summary + sentence + "\n"
         n += 1
 

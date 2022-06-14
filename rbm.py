@@ -50,7 +50,7 @@ def train_rbm(training_set):
 
     # Configuración de la RBM
     nv = len(training_set[0])  # Nodos visibles
-    nh = 5  # Nodos ocultos
+    nh = 9  # Nodos ocultos
     batch_size = 4
     rbm = RBM(nv, nh)  # Inicialización de la RBM
 
@@ -77,6 +77,9 @@ def train_rbm(training_set):
 
 
 def enhance_scores(test_set_np):
+
+    enhanced_scores = []
+
     test_set = torch.FloatTensor(test_set_np)
 
     # Configuración de la RBM
@@ -93,15 +96,17 @@ def enhance_scores(test_set_np):
         v = test_set[id_sentence:id_sentence + 1]
         vt = test_set[id_sentence:id_sentence + 1]
         if len(vt[vt >= 0]) > 0:
-            _, h = rbm.sample_h(v)
-            _, v = rbm.sample_v(h)
+            p_h_v, h = rbm.sample_h(v)
+            p_v_h, v = rbm.sample_v(h)
 
             # Predicciones!
-            tensor_to_array = v.numpy()
-            # print(len(tensor_to_array[0]))
-            print(s)
+            tensor_to_array = p_v_h.numpy()
+            enhanced_scores.append(tensor_to_array[0])
+            # print(tensor_to_array)
 
             test_loss += torch.mean(torch.abs(vt[vt >= 0] - v[vt >= 0]))
             s += 1.
     print('test loss: ' + str(test_loss / s))
+
+    return enhanced_scores
 

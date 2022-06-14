@@ -21,7 +21,10 @@ def get_rouge_scores(target='targets', output='outputs', persist=False):
         outputs = json.load(json_file)
 
     for text_id in outputs:
-        scores = rouge.get_scores(outputs[text_id], targets[text_id])
+        # rouge.get_scores(hypothesis, reference)
+        # Unigram recall reflects the proportion of words in X (reference summary sentence) that are also present in Y (candidate summary sentence)
+        # Unigram precision is the proportion of words in Y that are also in X
+        scores = rouge.get_scores(targets[text_id], outputs[text_id])
         scores_response[text_id] = scores
 
     if persist:
