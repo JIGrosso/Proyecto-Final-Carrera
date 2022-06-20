@@ -27,7 +27,7 @@ def main():
     preprocessed_text, splitted_text = text_preprocessing.process(dataset)
 
     print("Applying Summarizer...")
-    TextRank = text_rank_summarizer.summary(preprocessed_text)
+    # TextRank = text_rank_summarizer.summary(preprocessed_text)
 
     print("Getting Text Features...")
     features_vector = text_features.get_features_vector(splitted_text)

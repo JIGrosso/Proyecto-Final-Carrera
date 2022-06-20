@@ -24,17 +24,32 @@ def prepare_dataset(features):
     return test_set
 
 
+def _jaccard_similarity(sentence_a, sentence_b):
+    words_a = set(sentence_a.split())
+    words_b = set(sentence_b.split())
+    # print(words_a)
+    # print(words_b)
+
+    intersection = len(words_a.intersection(words_b))
+    # print(intersection)
+    union = len(words_a) + len(words_b)
+    # print(union)
+    return float(intersection/union)
+
+
 # Input: Array de features
 def improve_features(text_features):
 
     # Llamada a método de la rbm
+    rbm.train_rbm(prepare_dataset(text_features))
     enhanced_features = rbm.enhance_scores(prepare_dataset(text_features))
 
-    # Sum features
+    # Calculate global scores
     global_scores = {}
+
     # Flag
     sentence_position = 1
-    for sentence in text_features:
+    for sentence in enhanced_features:
         feature_position = 0
         for feature_score in sentence:
             # Initialize Dict
@@ -54,8 +69,26 @@ def improve_features(text_features):
 def summary(text, features):
 
     text_summary = ''
+    i = 0
     n = 0
-    for (sentence_position, score) in improve_features(features):
+
+    improved_features = improve_features(features)
+    jaccard_similarities = {}
+
+    while i < len(improved_features)/2:
+
+        if i == 0:
+            i += 1
+            continue
+        else:
+            sent_position = int(improved_features[i][0]) - 1
+            # text[1][0] = Texto sin stop words - Oracion con mas score
+            jaccard_similarities[sent_position] = _jaccard_similarity(text[1][0], text[1][sent_position])
+            i += 1
+
+    print(sorted(jaccard_similarities.items(), key=lambda kv:(kv[1], kv[0]), reverse=True))
+
+    for (sentence_position, score) in improved_features:
         if n < 5:
             # print(int(sentence_position) - 1)
             sentence = text[2][int(sentence_position) - 1]
