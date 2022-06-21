@@ -1,5 +1,4 @@
 import argparse
-import json
 
 import pandas as pd
 import text_preprocessing
@@ -28,10 +27,16 @@ def main():
     preprocessed_text, splitted_text = text_preprocessing.process(dataset)
 
     print("Applying Summarizer...")
-    TextRank = text_rank_summarizer.summary(preprocessed_text)
+    # TextRank = text_rank_summarizer.summary(preprocessed_text)
 
     print("Getting Text Features...")
     features_vector = text_features.get_features_vector(splitted_text)
+    """
+        Fetures_vector: Dictonary.
+            Key: Text_Id
+            Value: Array de longitud 9 (Cada elemento es un array y corresponde a una Feature)
+                Value[i]: Array de longitud igual a la cantidad de oraciones. Cada elemento es un score.
+    """
 
     print("Enhancing Text Features with Deep Learning...")
     TextFeatures = deep_learning_summarizer.generate_summaries(splitted_text, features_vector)
