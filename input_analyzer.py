@@ -34,8 +34,8 @@ def analyze_input(filename):
 
     rouge_scores = rouge_script.get_rouge_scores('input_analyzer', 'output_analyzer')
     # Si el recall es alto quiere decir que gran parte de las palabras del target estan contenidas en el input
-    plots.print_rouge_recall(rouge_scores)
-    plots.print_rouge_precision(rouge_scores)
+    plots.print_rouge_recall(rouge_scores, 'Input Analyzer')
+    plots.print_rouge_precision(rouge_scores, 'Input Analyzer')
 
 
 def main():
