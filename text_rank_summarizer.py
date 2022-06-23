@@ -31,7 +31,6 @@ def summary(preprocessed_dataset):
             aux_sentences = aux_sentences + str(sentence) + '\n'
             # TODO Tratar de obtener puntuación para oración
             # print(sentence)
-        # TODO Verificar si este paso es necesario
         summaries[text_id] = aux_sentences
         # outputs.append(nlp_sentencizer(aux_sentences))  # Transformamos el sumario en oraciones.
 

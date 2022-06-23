@@ -142,17 +142,6 @@ def __remove_stop_words(input_text):
 
 
 def __split_input(paragraphs):
-    """
-        Divide el input en párrafos haciendo uso de "/r/r/n".
-        Luego limpia con __clean_text() cada division.
-    """
-
-    # Split en parrafos
-    # Idea:
-    # if "\r\r\n" in text:
-    #     paragraphs = text.split("\r\r\n")
-    # else:
-    #     paragraphs = text.split("\n")
 
     paragraphs_into_sentences = []  # Cada elemento de este array es un array de oraciones.
     original_sentences = []  # Cada elemento de este array es una oracion que no se le quitaran las SW.
@@ -201,7 +190,16 @@ def process(dataset):
 
         target_data[json_line['bill_id']] = json_line['summary']  # Agrego el TARGET al Dict
 
-        paragraphs = json_line['text'].split("\r\r\n")
+        text = json_line['text']
+        # Split en parrafos
+        if "\r\r\n" in text:
+            paragraphs = text.split("\r\r\n")
+        elif "\r\n" in text:
+            paragraphs = text.split("\r\n")
+        else:
+            paragraphs = text.split("\n")
+
+        # paragraphs = text.split("\r\r\n")
         cleaned_paragraphs = []
         cleaned_text = ''  # Input para TextRank
 
