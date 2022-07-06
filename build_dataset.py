@@ -9,7 +9,7 @@ def main():
     counts = 0
 
     while True:
-        text_id = randint(309, 150000)
+        text_id = randint(309, 1500000)
         if text_id not in read:
             try:
                 with open('./dataset/fallos_clasificados/' + str(text_id) + '.json', 'r', encoding='utf8') as file:
@@ -26,11 +26,11 @@ def main():
                 print('El archivo ' + str(text_id) + '.json no existe')
             read.append(text_id)
         # Setear la cantidad de fallos a leer.
-        if counts == 10:
+        if counts == 1:
             break
     dataset['lines'] = lines
     # Guardado - Setear el nombre del archivo en donde se van a almacenar
-    with open('./dataset/test_set_final_01.json', 'w', encoding='utf8') as outfile:
+    with open('dataset/final_test_set_1.json', 'w', encoding='utf8') as outfile:
         json.dump(dataset, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 
 

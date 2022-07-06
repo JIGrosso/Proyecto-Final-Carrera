@@ -17,10 +17,9 @@ def summary(preprocessed_dataset):
     # Auxiliares
     summaries = {}
 
-    nlp.max_length = 10 ** 7  # TODO VERIFICAR PARA QUE SIRVE ESTO
+    nlp.max_length = 10 ** 7  # TODO VERIFICAR PARA QUE SIRVE
 
     # Iterar sobre un Dict que viene desde el main
-    # TODO El dict que viene deberían ser solo los inputs
     for text_id in preprocessed_dataset:
         aux_sentences = ""  # Auxiliar para oraciones.
         input_line = preprocessed_dataset[text_id]  # Leo el INPUT

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 
 def print_scores(x1, y1, y2, yL, score_type):
@@ -51,12 +52,12 @@ def scatter_scores(x1, y, recall_type, score_type):
     plt.show()
 
 
-def bar_scores(x, y, technique_type, recall_type, score_type):
+def bar_scores(x, y, technique_type, score_type, rouge_type, color):
 
     sizes = np.random.uniform(30, 30, len(x))
     colors = np.random.uniform(15, 80, len(x))
 
-    plt.bar(x, y, width=0.5, edgecolor="white", linewidth=0.7)
+    plt.bar(x, y, width=0.5, edgecolor="white", linewidth=0.7, color=color)
 
     plt.ylim([0.0, 1.0])
 
@@ -66,7 +67,12 @@ def bar_scores(x, y, technique_type, recall_type, score_type):
     plt.ylabel('Rouge score')
 
     # giving a title to my graph
-    plt.title(technique_type + ' - ROUGE ' + recall_type + ' - ' + score_type + ' Scores')
+    plt.title(technique_type + ' - ROUGE ' + score_type + ' - ' + rouge_type + ' Scores')
+
+    name = technique_type.lower().replace(' ', '_') + '_' + rouge_type.lower() + '_rouge_' + score_type
+
+    # plt.savefig(os.path.join('./results/', '%s.png' % name))
+    # plt.savefig("myfig.png")
 
     plt.show()
 
@@ -91,8 +97,8 @@ def print_rouge_recall(scores, technique):
     # print_scores(x1, y1, y2, yL, 'Recall')
     # scatter_scores(x1, y1, 'Recall')
     # scatter_scores(x1, yL, 'Recall')
-    bar_scores(x1, y1, technique, '1', 'Recall')
-    bar_scores(x1, yL, technique, 'L', 'Recall')
+    bar_scores(x1, y1, technique, '1', 'Recall', 'limegreen')
+    bar_scores(x1, yL, technique, 'L', 'Recall', 'green')
 
 
 def print_rouge_precision(scores, technique):
@@ -113,8 +119,8 @@ def print_rouge_precision(scores, technique):
         x_index += 1
 
     # print_scores(x1, y1, y2, yL, 'Precision')
-    bar_scores(x1, y1, technique, '1', 'Precisión')
-    bar_scores(x1, yL, technique, 'L', 'Precisión')
+    bar_scores(x1, y1, technique, '1', 'Precisión', 'turquoise')
+    bar_scores(x1, yL, technique, 'L', 'Precisión', 'teal')
 
 
 def print_rouge_f1_score(scores, technique):
@@ -135,7 +141,7 @@ def print_rouge_f1_score(scores, technique):
         x_index += 1
 
     # print_scores(x1, y1, y2, yL, 'F1 Score')
-    bar_scores(x1, y1, technique, '1', 'F-Score')
-    bar_scores(x1, yL, technique, 'L', 'F-Score')
+    bar_scores(x1, y1, technique, '1', 'F-Score', 'lightskyblue')
+    bar_scores(x1, yL, technique, 'L', 'F-Score', 'steelblue')
 
 
