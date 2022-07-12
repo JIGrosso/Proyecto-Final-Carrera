@@ -34,7 +34,7 @@ def print_scores(x1, y1, y2, yL, score_type):
     plt.show()
 
 
-def scatter_scores(x1, y, recall_type, score_type):
+def scatter_scores(x1, y, rouge_type, score_type):
 
     sizes = np.random.uniform(30, 30, len(x1))
     colors = np.random.uniform(15, 80, len(x1))
@@ -47,7 +47,7 @@ def scatter_scores(x1, y, recall_type, score_type):
     plt.ylabel('rouge score')
 
     # giving a title to my graph
-    plt.title('ROUGE ' + recall_type + ' - ' + score_type + ' Scores')
+    plt.title('ROUGE ' + rouge_type + ' - ' + score_type + ' Scores')
 
     plt.show()
 
@@ -93,9 +93,8 @@ def print_rouge_recall(scores, technique):
         yL.append(scores[text_id][0]['rouge-l']['r'])
         x_index += 1
 
-    # print_scores(x1, y1, y2, yL, 'Recall')
     # scatter_scores(x1, y1, 'Recall')
-    # scatter_scores(x1, yL, 'Recall')
+    scatter_scores(x1, yL, 'L', 'Recall')
     bar_scores(x1, y1, technique, '1', 'Recall', 'limegreen')
     bar_scores(x1, yL, technique, 'L', 'Recall', 'green')
 
@@ -117,7 +116,7 @@ def print_rouge_precision(scores, technique):
         yL.append(scores[text_id][0]['rouge-l']['p'])
         x_index += 1
 
-    # print_scores(x1, y1, y2, yL, 'Precision')
+    scatter_scores(x1, yL, 'L', 'Precision')
     bar_scores(x1, y1, technique, '1', 'Precisión', 'turquoise')
     bar_scores(x1, yL, technique, 'L', 'Precisión', 'teal')
 
@@ -139,7 +138,6 @@ def print_rouge_f1_score(scores, technique):
         yL.append(scores[text_id][0]['rouge-l']['f'])
         x_index += 1
 
-    # print_scores(x1, y1, y2, yL, 'F1 Score')
     bar_scores(x1, y1, technique, '1', 'F-Score', 'lightskyblue')
     bar_scores(x1, yL, technique, 'L', 'F-Score', 'steelblue')
 

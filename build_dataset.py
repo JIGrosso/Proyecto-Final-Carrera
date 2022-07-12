@@ -4,7 +4,7 @@ import json
 
 def main():
     # Numero de documentos
-    limit = 100
+    limit = 50
 
     dataset = {'lines': []}
     lines = []

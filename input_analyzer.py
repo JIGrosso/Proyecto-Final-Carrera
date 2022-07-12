@@ -39,7 +39,7 @@ def analyze_input(filename):
 
 
 def main():
-    analyze_input('test_set_final_01')
+    analyze_input('final_test_set_100')
 
 
 if __name__ == "__main__":
