@@ -71,8 +71,7 @@ def bar_scores(x, y, technique_type, score_type, rouge_type, color):
 
     name = technique_type.lower().replace(' ', '_') + '_' + rouge_type.lower() + '_rouge_' + score_type
 
-    # plt.savefig(os.path.join('./results/', '%s.png' % name))
-    # plt.savefig("myfig.png")
+    plt.savefig('./results/' + name + '.png')
 
     plt.show()
 

@@ -151,10 +151,11 @@ def __split_input(paragraphs):
         sentences = []  # Inicializa vacío, se insertan todas las oraciones del párrafo, y luego se se inserta en array de párrafos
 
         for ss in aux_splitted_sentences:
-            original_sentences.append(ss)
-            sentences.append(ss)
-
-        paragraphs_into_sentences.append(sentences)  # Agrego array de oraciones a array de parrafos
+            if len(ss.split()) > 2:
+                original_sentences.append(ss)
+                sentences.append(ss)
+        if len(sentences) > 0:
+            paragraphs_into_sentences.append(sentences)  # Agrego array de oraciones a array de parrafos
 
     '''
     Loop through each cleaned paragraph, and through each sentence of it 
@@ -204,9 +205,9 @@ def process(dataset):
         cleaned_text = ''  # Input para TextRank
 
         for p in paragraphs:
-            # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
-            cleaned_paragraphs.append(__clean_text(p))
-            cleaned_text = cleaned_text + p + "\n"
+            if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
+                cleaned_paragraphs.append(__clean_text(p))
+                cleaned_text = cleaned_text + __clean_text(p) + "\n"
 
         paragraphs_into_sentences, original_sentences = __split_input(cleaned_paragraphs)
 
@@ -219,17 +220,22 @@ def process(dataset):
 
             for cs in cp:  # Recorro cada elemento (oracion) del array
                 nsw_cs = __remove_stop_words(cs)  # Elimino stop words
-                nsw_sentences.append(nsw_cs)  # Almaceno oraciones sin stop words
-                aux_nsw_cp.append(nsw_cs)  # Armo parrafo de oraciones sin stop words
+                if len(nsw_cs.split()) > 0:
+                    nsw_sentences.append(nsw_cs)  # Almaceno oraciones sin stop words
+                    aux_nsw_cp.append(nsw_cs)  # Armo parrafo de oraciones sin stop words
+                else:
+                    original_sentences.remove(cs)
 
             nsw_paragraphs_into_sentences.append(aux_nsw_cp)  # Almaceno parrafos con oraciones sin stop words
 
         # En nsw_paragraphs_into_sentences tenemos un array de párrafos, donde cada uno es un array de oraciones sin stop words
         # En nsw_sentences tenemos todas las oraciones sin stop words, sin dividir en párrafos
-
-        splitted_text.append(nsw_paragraphs_into_sentences)
-        splitted_text.append(nsw_sentences)
-        splitted_text.append(original_sentences)
+        if len(nsw_sentences) == len(original_sentences):
+            splitted_text.append(nsw_paragraphs_into_sentences)
+            splitted_text.append(nsw_sentences)
+            splitted_text.append(original_sentences)
+        else:
+            print("An error ocurred when preprocessing the document " + json_line['bill_id'])
 
         # Actualizo el Dict con los inputs preprocesados
         input_data[json_line['bill_id']] = cleaned_text
