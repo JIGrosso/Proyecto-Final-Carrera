@@ -41,8 +41,10 @@ def scatter_scores(x1, y, rouge_type, score_type):
 
     plt.scatter(x1, y, s=sizes, c=colors)
 
+    plt.ylim([0.0, 1.0])
+
     # naming the x axis
-    plt.xlabel('document number')
+    plt.xlabel('documents')
     # naming the y axis
     plt.ylabel('rouge score')
 
@@ -93,10 +95,10 @@ def print_rouge_recall(scores, technique):
         yL.append(scores[text_id][0]['rouge-l']['r'])
         x_index += 1
 
-    # scatter_scores(x1, y1, 'Recall')
+    scatter_scores(x1, y1, '1', 'Recall')
     scatter_scores(x1, yL, 'L', 'Recall')
-    bar_scores(x1, y1, technique, '1', 'Recall', 'limegreen')
-    bar_scores(x1, yL, technique, 'L', 'Recall', 'green')
+    # bar_scores(x1, y1, technique, '1', 'Recall', 'limegreen')
+    # bar_scores(x1, yL, technique, 'L', 'Recall', 'green')
 
 
 def print_rouge_precision(scores, technique):
@@ -116,7 +118,7 @@ def print_rouge_precision(scores, technique):
         yL.append(scores[text_id][0]['rouge-l']['p'])
         x_index += 1
 
-    scatter_scores(x1, yL, 'L', 'Precision')
+    # scatter_scores(x1, yL, 'L', 'Precision')
     bar_scores(x1, y1, technique, '1', 'Precisión', 'turquoise')
     bar_scores(x1, yL, technique, 'L', 'Precisión', 'teal')
 

@@ -96,6 +96,9 @@ def __clean_text(text):
     refined_text = refined_text.replace("Direc.", "Dirección")
     refined_text = refined_text.replace("Art.", "Artículo")
     refined_text = refined_text.replace("Fdo.", "Firmado")
+    refined_text = refined_text.replace("E.D.", "el Derecho")
+    refined_text = refined_text.replace("L.L.", "la ley")
+    refined_text = refined_text.replace("cfr.", "conforme")
 
     # Elimina los puntos entre números. Ejemplo : 16.233 -> 16233
     refined_text = re.sub(DOT_BETWEEN_NUMBERS_re, lambda x: x.group().replace(".", ""), refined_text)
@@ -189,7 +192,7 @@ def process(dataset):
     for x in range(lenght):
         json_line = dataset.at[x, 'lines']  # Leo cada JSON LINE
 
-        target_data[json_line['bill_id']] = json_line['summary']  # Agrego el TARGET al Dict
+        target_data[json_line['bill_id']] = __clean_text(json_line['summary'])  # Agrego el TARGET al Dict
 
         text = json_line['text']
         # Split en parrafos

@@ -7,8 +7,8 @@ from spacy.lang.es import Spanish
 def summary(preprocessed_dataset):
 
     # Load Spanish tokenizer, tagger, parser and NER
-    #nlp = spacy.load("es_dep_news_trf")
-    nlp = spacy.load("es_core_news_sm")
+    nlp = spacy.load("es_dep_news_trf")
+    # nlp = spacy.load("es_core_news_sm")
 
     # Add TextRank implementation to the pipeline || add PyTextRank to the spaCy pipeline
     nlp.add_pipe("textrank")
@@ -26,7 +26,7 @@ def summary(preprocessed_dataset):
         # doc._.texrank.summary genera el sumario a partir de la info generada en 'doc'.
         # Basicamente summary toma las frases que TextRank considera mas relevantes y las une en un solo objeto.
         i = 1
-        for sentence in doc._.textrank.summary(limit_phrases=5, limit_sentences=3):
+        for sentence in doc._.textrank.summary(limit_phrases=5, limit_sentences=15):
             aux_sentences = aux_sentences + str(sentence) + '\n'
             # print(i)
             # i += 1

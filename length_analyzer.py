@@ -1,7 +1,4 @@
 import pandas as pd
-import json
-import rouge_script
-import plots
 
 
 def analyze_input():
