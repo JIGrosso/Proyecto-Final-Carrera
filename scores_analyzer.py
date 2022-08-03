@@ -82,13 +82,13 @@ def score_90(filename):
 
 def main():
     # analyze_scores('text_rank_summaries_rouge_scores')
-    # analyze_scores('tf_dl_summaries_rouge_scores')
-    analyze_scores('input_analyzer_16390_rouge_scores')
-    analyze_scores('input_analyzer_1124571_rouge_scores')
-    analyze_scores('input_analyzer_1167175_rouge_scores')
-    analyze_scores('input_analyzer_1193678_rouge_scores')
-    analyze_scores('input_analyzer_1231993_rouge_scores')
-    analyze_scores('input_analyzer_1234937_rouge_scores')
+    analyze_scores('tf_dl_summaries_rouge_scores')
+    # analyze_scores('input_analyzer_16390_rouge_scores')
+    # analyze_scores('input_analyzer_1124571_rouge_scores')
+    # analyze_scores('input_analyzer_1167175_rouge_scores')
+    # analyze_scores('input_analyzer_1193678_rouge_scores')
+    # analyze_scores('input_analyzer_1231993_rouge_scores')
+    # analyze_scores('input_analyzer_1234937_rouge_scores')
 
     # score_90('input_analyzer_16390_rouge_scores')
     # score_90('input_analyzer_1124571_rouge_scores')
