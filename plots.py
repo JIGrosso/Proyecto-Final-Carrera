@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import os
+import pandas as pd
 
 
 def print_scores(x1, y1, y2, yL, score_type):
@@ -91,11 +91,12 @@ def print_rouge_recall(scores, technique):
         x1.append(x_index)
         # corresponding y axis values
         y1.append(scores[text_id][0]['rouge-1']['r'])
-        # y2.append(scores[text_id][0]['rouge-2']['r'])
+        y2.append(scores[text_id][0]['rouge-2']['r'])
         yL.append(scores[text_id][0]['rouge-l']['r'])
         x_index += 1
 
     scatter_scores(x1, y1, '1', 'Recall')
+    scatter_scores(x1, y2, '2', 'Recall')
     scatter_scores(x1, yL, 'L', 'Recall')
     # bar_scores(x1, y1, technique, '1', 'Recall', 'limegreen')
     # bar_scores(x1, yL, technique, 'L', 'Recall', 'green')
@@ -142,5 +143,30 @@ def print_rouge_f1_score(scores, technique):
 
     bar_scores(x1, y1, technique, '1', 'F-Score', 'lightskyblue')
     bar_scores(x1, yL, technique, 'L', 'F-Score', 'steelblue')
+
+
+def print_scores_from_file(filename):
+
+    dataset = pd.read_json(f'./outputs/{filename}.json', typ='series')
+
+    scores = {}
+
+    for key, value in dataset.items():
+        scores[key] = value
+
+    print_rouge_recall(scores, 'Recall')
+
+
+def main():
+    print_scores_from_file('input_analyzer_16390_rouge_scores')
+    print_scores_from_file('input_analyzer_1124571_rouge_scores')
+    print_scores_from_file('input_analyzer_1167175_rouge_scores')
+    print_scores_from_file('input_analyzer_1193678_rouge_scores')
+    print_scores_from_file('input_analyzer_1231993_rouge_scores')
+    print_scores_from_file('input_analyzer_1234937_rouge_scores')
+
+
+if __name__ == "__main__":
+    main()
 
 

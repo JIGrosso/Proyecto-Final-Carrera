@@ -27,10 +27,10 @@ def main():
     preprocessed_text, splitted_text = text_preprocessing.process(dataset)
 
     print("Applying Text Rank Summarizer...")
-    TextRank = text_rank_summarizer.summary(preprocessed_text)
+    # TextRank = text_rank_summarizer.summary(preprocessed_text)
 
     print("Getting Text Features...")
-    # features_vector = text_features.get_features_vector(splitted_text)
+    features_vector = text_features.get_features_vector(splitted_text)
     """
         Fetures_vector: Dictonary.
             Key: Text_Id
@@ -40,7 +40,7 @@ def main():
 
     print("Enhancing Text Features with Deep Learning...")
     print("Applying Feature Based Summarizer...")
-    # TextFeatures = deep_learning_summarizer.generate_summaries(splitted_text, features_vector)
+    TextFeatures = deep_learning_summarizer.generate_summaries(splitted_text, features_vector)
 
     print("Calculating ROUGE metrics...")
     # Enviar parametro persist=True si se quieren persistir los scores

@@ -86,7 +86,7 @@ def summary(text, features):
     sorted_similarities = sorted(jaccard_similarities.items(), key=lambda kv:(kv[1], kv[0]), reverse=True)
 
     for (sentence_position, score) in sorted_similarities:
-        if n < 5:
+        if n < 16:
             # print(int(sentence_position) - 1)
             sentence = text[2][int(sentence_position) - 1]
             # print(sentence)

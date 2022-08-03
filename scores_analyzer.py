@@ -58,37 +58,44 @@ def score_90(filename):
     total = 0
 
     total_rouge_1_r = 0
+    total_rouge_2_r = 0
     total_rouge_l_r = 0
+
+    bottom = 0.0
+    top = 0.5
 
     # Itero sobre el Dataset y lo fragmento
     for key, value in dataset.items():
         total += 1
         for summary_scores in value:
-            if 0.7 < summary_scores['rouge-1']['r'] <= 0.9:
+            if bottom <= summary_scores['rouge-1']['r'] < top:
                 total_rouge_1_r += 1
-            if 0.7 < summary_scores['rouge-l']['r'] <= 0.9:
+            if bottom <= summary_scores['rouge-2']['r'] < top:
+                total_rouge_2_r += 1
+            if bottom <= summary_scores['rouge-l']['r'] < top:
                 total_rouge_l_r += 1
 
-    print(f"[ROUGE-1] Porcentaje de documentos con recall > 0.7 y <= 0.9: %{round(total_rouge_1_r*100/total, 2)}")
-    print(f"[ROUGE-L] Porcentaje de documentos con recall > 0.7 y <= 0.9: %{round(total_rouge_l_r*100/total, 2)}")
+    print(f"[ROUGE-1] Porcentaje de documentos con recall >= {bottom} y < {top}: %{round(total_rouge_1_r*100/total, 2)}")
+    print(f"[ROUGE-2] Porcentaje de documentos con recall >= {bottom} y < {top}: %{round(total_rouge_2_r * 100 / total, 2)}")
+    print(f"[ROUGE-L] Porcentaje de documentos con recall >= {bottom} y < {top}: %{round(total_rouge_l_r*100/total, 2)}")
 
 
 def main():
     # analyze_scores('text_rank_summaries_rouge_scores')
     # analyze_scores('tf_dl_summaries_rouge_scores')
-    # analyze_scores('input_analyzer_16390_rouge_scores')
-    # analyze_scores('input_analyzer_1124571_rouge_scores')
-    # analyze_scores('input_analyzer_1167175_rouge_scores')
-    # analyze_scores('input_analyzer_1193678_rouge_scores')
-    # analyze_scores('input_analyzer_1231993_rouge_scores')
-    # analyze_scores('input_analyzer_1234937_rouge_scores')
+    analyze_scores('input_analyzer_16390_rouge_scores')
+    analyze_scores('input_analyzer_1124571_rouge_scores')
+    analyze_scores('input_analyzer_1167175_rouge_scores')
+    analyze_scores('input_analyzer_1193678_rouge_scores')
+    analyze_scores('input_analyzer_1231993_rouge_scores')
+    analyze_scores('input_analyzer_1234937_rouge_scores')
 
-    score_90('input_analyzer_16390_rouge_scores')
-    score_90('input_analyzer_1124571_rouge_scores')
-    score_90('input_analyzer_1167175_rouge_scores')
-    score_90('input_analyzer_1193678_rouge_scores')
-    score_90('input_analyzer_1231993_rouge_scores')
-    score_90('input_analyzer_1234937_rouge_scores')
+    # score_90('input_analyzer_16390_rouge_scores')
+    # score_90('input_analyzer_1124571_rouge_scores')
+    # score_90('input_analyzer_1167175_rouge_scores')
+    # score_90('input_analyzer_1193678_rouge_scores')
+    # score_90('input_analyzer_1231993_rouge_scores')
+    # score_90('input_analyzer_1234937_rouge_scores')
 
 
 if __name__ == "__main__":
