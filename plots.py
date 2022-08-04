@@ -116,7 +116,7 @@ def print_rouge_precision(scores, technique):
         x1.append(x_index)
         # corresponding y axis values
         y1.append(scores[text_id][0]['rouge-1']['p'])
-        # y2.append(scores[text_id][0]['rouge-2']['p'])
+        y2.append(scores[text_id][0]['rouge-2']['p'])
         yL.append(scores[text_id][0]['rouge-l']['p'])
         x_index += 1
 

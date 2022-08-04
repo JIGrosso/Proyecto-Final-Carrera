@@ -1,11 +1,6 @@
 from random import randint
 import json
-
-
-def main():
-    build_ordered_dataset()
-    # build_random_dataset()
-
+import pandas as pd
 
 def build_random_dataset():
     # Numero de documentos
@@ -76,6 +71,41 @@ def build_ordered_dataset():
 
     with open(f'dataset/input_analyzer_{text_id}.json', 'w', encoding='utf8') as outfile:
         json.dump(dataset, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+
+
+def build_dataset_from_scores(scores_filename):
+
+    output_filename = 'cut_dataset'
+
+    dataset = {'lines': []}
+    lines = []
+
+    scores = pd.read_json('./outputs/' + scores_filename + '.json')
+
+    for key, value in scores.items():
+        recall_condition = False
+        for summary_scores in value:
+            recall_condition = summary_scores['rouge-1']['r'] >= 0.9 and summary_scores['rouge-2']['r'] >= 0.9 and summary_scores['rouge-l']['r'] >= 0.9
+        if recall_condition:
+            with open(f'./dataset/fallos_clasificados/{key}.json', 'r', encoding='utf8') as file:
+                fallo = json.load(file)
+            text_line = {
+                'bill_id': fallo['id_fallo'],
+                'text': fallo['texto_fallos'],
+                'summary': fallo['texto_sumario']
+            }
+            lines.append(text_line)
+
+    dataset['lines'] = lines
+
+    with open(f'dataset/{output_filename}.json', 'w', encoding='utf8') as outfile:
+        json.dump(dataset, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+
+
+def main():
+    # build_ordered_dataset()
+    # build_random_dataset()
+    build_dataset_from_scores('input_analyzer_1234937_rouge_scores')
 
 
 if __name__ == "__main__":
