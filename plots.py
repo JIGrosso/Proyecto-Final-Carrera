@@ -98,9 +98,9 @@ def print_rouge_recall(scores, technique):
     # scatter_scores(x1, y1, '1', 'Recall')
     # scatter_scores(x1, y2, '2', 'Recall')
     # scatter_scores(x1, yL, 'L', 'Recall')
-    bar_scores(x1, y1, technique, '1', 'Recall', 'limegreen')
-    bar_scores(x1, y1, technique, '2', 'Recall', 'limegreen')
-    bar_scores(x1, yL, technique, 'L', 'Recall', 'green')
+    bar_scores(x1, y1, technique, '1', 'Recall', 'steelblue')
+    bar_scores(x1, y1, technique, '2', 'Recall', 'slateblue')
+    bar_scores(x1, yL, technique, 'L', 'Recall', 'yellowgreen')
 
 
 def print_rouge_precision(scores, technique):
@@ -121,8 +121,9 @@ def print_rouge_precision(scores, technique):
         x_index += 1
 
     # scatter_scores(x1, yL, 'L', 'Precision')
-    bar_scores(x1, y1, technique, '1', 'Precisión', 'turquoise')
-    bar_scores(x1, yL, technique, 'L', 'Precisión', 'teal')
+    bar_scores(x1, y1, technique, '1', 'Precisión', 'steelblue')
+    bar_scores(x1, y2, technique, '2', 'Precisión', 'slateblue')
+    bar_scores(x1, yL, technique, 'L', 'Precisión', 'yellowgreen')
 
 
 def print_rouge_f1_score(scores, technique):
@@ -142,8 +143,9 @@ def print_rouge_f1_score(scores, technique):
         yL.append(scores[text_id][0]['rouge-l']['f'])
         x_index += 1
 
-    bar_scores(x1, y1, technique, '1', 'F-Score', 'lightskyblue')
-    bar_scores(x1, yL, technique, 'L', 'F-Score', 'steelblue')
+    bar_scores(x1, y1, technique, '1', 'F-Score', 'steelblue')
+    bar_scores(x1, y2, technique, '2', 'F-Score', 'slateblue')
+    bar_scores(x1, yL, technique, 'L', 'F-Score', 'yellowgreen')
 
 
 def print_scores_from_file(filename):
