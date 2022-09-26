@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 def print_scores(x1, y1, y2, yL, score_type):
@@ -33,30 +34,32 @@ def print_scores(x1, y1, y2, yL, score_type):
     plt.show()
 
 
-def scatter_scores(x1, y, recall_type, score_type):
+def scatter_scores(x1, y, rouge_type, score_type):
 
     sizes = np.random.uniform(30, 30, len(x1))
     colors = np.random.uniform(15, 80, len(x1))
 
     plt.scatter(x1, y, s=sizes, c=colors)
 
+    plt.ylim([0.0, 1.0])
+
     # naming the x axis
-    plt.xlabel('document number')
+    plt.xlabel('documents')
     # naming the y axis
     plt.ylabel('rouge score')
 
     # giving a title to my graph
-    plt.title('ROUGE ' + recall_type + ' - ' + score_type + ' Scores')
+    plt.title('ROUGE ' + rouge_type + ' - ' + score_type + ' Scores')
 
     plt.show()
 
 
-def bar_scores(x, y, technique_type, recall_type, score_type):
+def bar_scores(x, y, technique_type, score_type, rouge_type, color):
 
     sizes = np.random.uniform(30, 30, len(x))
     colors = np.random.uniform(15, 80, len(x))
 
-    plt.bar(x, y, width=0.5, edgecolor="white", linewidth=0.7)
+    plt.bar(x, y, width=0.5, edgecolor="white", linewidth=0.7, color=color)
 
     plt.ylim([0.0, 1.0])
 
@@ -66,7 +69,11 @@ def bar_scores(x, y, technique_type, recall_type, score_type):
     plt.ylabel('Rouge score')
 
     # giving a title to my graph
-    plt.title(technique_type + ' - ROUGE ' + recall_type + ' - ' + score_type + ' Scores')
+    plt.title(technique_type + ' - ROUGE ' + score_type + ' - ' + rouge_type + ' Scores')
+
+    name = technique_type.lower().replace(' ', '_') + '_' + rouge_type.lower() + '_rouge_' + score_type
+
+    plt.savefig('./results/' + name + '.png')
 
     plt.show()
 
@@ -84,15 +91,16 @@ def print_rouge_recall(scores, technique):
         x1.append(x_index)
         # corresponding y axis values
         y1.append(scores[text_id][0]['rouge-1']['r'])
-        # y2.append(scores[text_id][0]['rouge-2']['r'])
+        y2.append(scores[text_id][0]['rouge-2']['r'])
         yL.append(scores[text_id][0]['rouge-l']['r'])
         x_index += 1
 
-    # print_scores(x1, y1, y2, yL, 'Recall')
-    # scatter_scores(x1, y1, 'Recall')
-    # scatter_scores(x1, yL, 'Recall')
-    bar_scores(x1, y1, technique, '1', 'Recall')
-    bar_scores(x1, yL, technique, 'L', 'Recall')
+    # scatter_scores(x1, y1, '1', 'Recall')
+    # scatter_scores(x1, y2, '2', 'Recall')
+    # scatter_scores(x1, yL, 'L', 'Recall')
+    bar_scores(x1, y1, technique, '1', 'Recall', 'steelblue')
+    bar_scores(x1, y1, technique, '2', 'Recall', 'slateblue')
+    bar_scores(x1, yL, technique, 'L', 'Recall', 'yellowgreen')
 
 
 def print_rouge_precision(scores, technique):
@@ -108,13 +116,14 @@ def print_rouge_precision(scores, technique):
         x1.append(x_index)
         # corresponding y axis values
         y1.append(scores[text_id][0]['rouge-1']['p'])
-        # y2.append(scores[text_id][0]['rouge-2']['p'])
+        y2.append(scores[text_id][0]['rouge-2']['p'])
         yL.append(scores[text_id][0]['rouge-l']['p'])
         x_index += 1
 
-    # print_scores(x1, y1, y2, yL, 'Precision')
-    bar_scores(x1, y1, technique, '1', 'Precisión')
-    bar_scores(x1, yL, technique, 'L', 'Precisión')
+    # scatter_scores(x1, yL, 'L', 'Precision')
+    bar_scores(x1, y1, technique, '1', 'Precisión', 'steelblue')
+    bar_scores(x1, y2, technique, '2', 'Precisión', 'slateblue')
+    bar_scores(x1, yL, technique, 'L', 'Precisión', 'yellowgreen')
 
 
 def print_rouge_f1_score(scores, technique):
@@ -134,8 +143,37 @@ def print_rouge_f1_score(scores, technique):
         yL.append(scores[text_id][0]['rouge-l']['f'])
         x_index += 1
 
-    # print_scores(x1, y1, y2, yL, 'F1 Score')
-    bar_scores(x1, y1, technique, '1', 'F-Score')
-    bar_scores(x1, yL, technique, 'L', 'F-Score')
+    bar_scores(x1, y1, technique, '1', 'F-Score', 'steelblue')
+    bar_scores(x1, y2, technique, '2', 'F-Score', 'slateblue')
+    bar_scores(x1, yL, technique, 'L', 'F-Score', 'yellowgreen')
+
+
+def print_scores_from_file(filename):
+
+    dataset = pd.read_json(f'./outputs/{filename}.json', typ='series')
+
+    scores = {}
+
+    for key, value in dataset.items():
+        scores[key] = value
+
+    print_rouge_recall(scores, 'Recall')
+    print_rouge_precision(scores, 'Precision')
+    print_rouge_f1_score(scores, 'F-Score')
+
+
+def main():
+    # print_scores_from_file('input_analyzer_16390_rouge_scores')
+    # print_scores_from_file('input_analyzer_1124571_rouge_scores')
+    # print_scores_from_file('input_analyzer_1167175_rouge_scores')
+    # print_scores_from_file('input_analyzer_1193678_rouge_scores')
+    # print_scores_from_file('input_analyzer_1231993_rouge_scores')
+    # print_scores_from_file('input_analyzer_1234937_rouge_scores')
+
+    print_scores_from_file("tf_dl_summaries_rouge_scores")
+
+
+if __name__ == "__main__":
+    main()
 
 

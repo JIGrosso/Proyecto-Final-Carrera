@@ -96,6 +96,9 @@ def __clean_text(text):
     refined_text = refined_text.replace("Direc.", "Dirección")
     refined_text = refined_text.replace("Art.", "Artículo")
     refined_text = refined_text.replace("Fdo.", "Firmado")
+    refined_text = refined_text.replace("E.D.", "el Derecho")
+    refined_text = refined_text.replace("L.L.", "la ley")
+    refined_text = refined_text.replace("cfr.", "conforme")
 
     # Elimina los puntos entre números. Ejemplo : 16.233 -> 16233
     refined_text = re.sub(DOT_BETWEEN_NUMBERS_re, lambda x: x.group().replace(".", ""), refined_text)
@@ -151,10 +154,11 @@ def __split_input(paragraphs):
         sentences = []  # Inicializa vacío, se insertan todas las oraciones del párrafo, y luego se se inserta en array de párrafos
 
         for ss in aux_splitted_sentences:
-            original_sentences.append(ss)
-            sentences.append(ss)
-
-        paragraphs_into_sentences.append(sentences)  # Agrego array de oraciones a array de parrafos
+            if len(ss.split()) > 2:
+                original_sentences.append(ss)
+                sentences.append(ss)
+        if len(sentences) > 0:
+            paragraphs_into_sentences.append(sentences)  # Agrego array de oraciones a array de parrafos
 
     '''
     Loop through each cleaned paragraph, and through each sentence of it 
@@ -178,8 +182,8 @@ def process(dataset):
     # Auxiliares
     input_data = {}  # Dict con todos los inputs. Se utiliza para la tecnica de TextRank
     splitted_input_data = {}  # Dict con todos los inputs separados en párrafos. Se utiliza para la tecnica de deep learning
-
     target_data = {}  # Dict con todos los targets
+
     index = dataset.index  # Longitud del dataset
     lenght = len(index)  # Longitud del dataset
     print("Cantidad de documentos legales: " + str(lenght))
@@ -188,7 +192,7 @@ def process(dataset):
     for x in range(lenght):
         json_line = dataset.at[x, 'lines']  # Leo cada JSON LINE
 
-        target_data[json_line['bill_id']] = json_line['summary']  # Agrego el TARGET al Dict
+        target_data[json_line['bill_id']] = __clean_text(json_line['summary'])  # Agrego el TARGET al Dict
 
         text = json_line['text']
         # Split en parrafos
@@ -204,9 +208,9 @@ def process(dataset):
         cleaned_text = ''  # Input para TextRank
 
         for p in paragraphs:
-            # if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
-            cleaned_paragraphs.append(__clean_text(p))
-            cleaned_text = cleaned_text + p + "\n"
+            if len(p.split()) > 3:  # Elimina los párrafos de menos de 3 palabras.
+                cleaned_paragraphs.append(__clean_text(p))
+                cleaned_text = cleaned_text + __clean_text(p) + "\n"
 
         paragraphs_into_sentences, original_sentences = __split_input(cleaned_paragraphs)
 
@@ -219,17 +223,22 @@ def process(dataset):
 
             for cs in cp:  # Recorro cada elemento (oracion) del array
                 nsw_cs = __remove_stop_words(cs)  # Elimino stop words
-                nsw_sentences.append(nsw_cs)  # Almaceno oraciones sin stop words
-                aux_nsw_cp.append(nsw_cs)  # Armo parrafo de oraciones sin stop words
+                if len(nsw_cs.split()) > 0:
+                    nsw_sentences.append(nsw_cs)  # Almaceno oraciones sin stop words
+                    aux_nsw_cp.append(nsw_cs)  # Armo parrafo de oraciones sin stop words
+                else:
+                    original_sentences.remove(cs)
 
             nsw_paragraphs_into_sentences.append(aux_nsw_cp)  # Almaceno parrafos con oraciones sin stop words
 
         # En nsw_paragraphs_into_sentences tenemos un array de párrafos, donde cada uno es un array de oraciones sin stop words
         # En nsw_sentences tenemos todas las oraciones sin stop words, sin dividir en párrafos
-
-        splitted_text.append(nsw_paragraphs_into_sentences)
-        splitted_text.append(nsw_sentences)
-        splitted_text.append(original_sentences)
+        if len(nsw_sentences) == len(original_sentences):
+            splitted_text.append(nsw_paragraphs_into_sentences)
+            splitted_text.append(nsw_sentences)
+            splitted_text.append(original_sentences)
+        else:
+            print("An error ocurred when preprocessing the document " + json_line['bill_id'])
 
         # Actualizo el Dict con los inputs preprocesados
         input_data[json_line['bill_id']] = cleaned_text

@@ -2,6 +2,7 @@ import pandas as pd
 import json
 import rouge_script
 import plots
+import sys
 
 
 def analyze_input(filename):
@@ -22,27 +23,33 @@ def analyze_input(filename):
         output_data[json_line['bill_id']] = json_line['summary']
         # Length analyzer
         length_data[json_line['bill_id']] = float(len(json_line['summary'])/len(json_line['text']))
-
+        # print(len(tp.__clean_text(json_line['summary']).split('.')))
 
     # Guardado
     with open('./outputs/input_analyzer.json', 'w', encoding='utf8') as outfile:
-        json.dump(input_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+        json.dump(input_data, outfile, indent=4, sort_keys=False, ensure_ascii=False)
     with open('./outputs/output_analyzer.json', 'w', encoding='utf8') as outfile:
-        json.dump(output_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+        json.dump(output_data, outfile, indent=4, sort_keys=False, ensure_ascii=False)
     with open('./outputs/length_analyzer.json', 'w', encoding='utf8') as outfile:
-        json.dump(length_data, outfile, indent=4, sort_keys=True, ensure_ascii=False)
+        json.dump(length_data, outfile, indent=4, sort_keys=False, ensure_ascii=False)
 
-    rouge_scores = rouge_script.get_rouge_scores('input_analyzer', 'output_analyzer')
+    rouge_scores = rouge_script.get_rouge_scores('output_analyzer', 'input_analyzer', persist=True)
     # Si el recall es alto quiere decir que gran parte de las palabras del target estan contenidas en el input
     plots.print_rouge_recall(rouge_scores, 'Input Analyzer')
-    plots.print_rouge_precision(rouge_scores, 'Input Analyzer')
+    # plots.print_rouge_precision(rouge_scores, 'Input Analyzer')
 
 
 def main():
-    analyze_input('test_input_dataset')
+    print(sys.getrecursionlimit())
+
+    sys.setrecursionlimit(1500)
+
+    file = 'segmented_dataset_input_analyzer_1234937_rouge_scores'
+    analyze_input(file)
 
 
 if __name__ == "__main__":
     main()
+
 
 
