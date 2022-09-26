@@ -182,8 +182,8 @@ def process(dataset):
     # Auxiliares
     input_data = {}  # Dict con todos los inputs. Se utiliza para la tecnica de TextRank
     splitted_input_data = {}  # Dict con todos los inputs separados en párrafos. Se utiliza para la tecnica de deep learning
-
     target_data = {}  # Dict con todos los targets
+
     index = dataset.index  # Longitud del dataset
     lenght = len(index)  # Longitud del dataset
     print("Cantidad de documentos legales: " + str(lenght))

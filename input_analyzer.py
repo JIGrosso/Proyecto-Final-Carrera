@@ -44,7 +44,7 @@ def main():
 
     sys.setrecursionlimit(1500)
 
-    file = 'input_analyzer_1234937'
+    file = 'segmented_dataset_input_analyzer_1234937_rouge_scores'
     analyze_input(file)
 
 

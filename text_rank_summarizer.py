@@ -26,7 +26,7 @@ def summary(preprocessed_dataset):
         # doc._.texrank.summary genera el sumario a partir de la info generada en 'doc'.
         # Basicamente summary toma las frases que TextRank considera mas relevantes y las une en un solo objeto.
         i = 1
-        for sentence in doc._.textrank.summary(limit_phrases=5, limit_sentences=15):
+        for sentence in doc._.textrank.summary(limit_phrases=5, limit_sentences=10):
             aux_sentences = aux_sentences + str(sentence) + '\n'
             # print(i)
             # i += 1
