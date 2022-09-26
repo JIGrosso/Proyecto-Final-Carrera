@@ -158,6 +158,8 @@ def print_scores_from_file(filename):
         scores[key] = value
 
     print_rouge_recall(scores, 'Recall')
+    print_rouge_precision(scores, 'Precision')
+    print_rouge_f1_score(scores, 'F-Score')
 
 
 def main():

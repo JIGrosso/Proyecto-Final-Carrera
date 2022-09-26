@@ -24,10 +24,8 @@ def get_rouge_scores(target='targets', output='outputs', persist=False):
         # rouge.get_scores(hypothesis, reference)
         # Unigram recall reflects the proportion of words in X (reference summary sentence) that are also present in Y (candidate summary sentence)
         # Unigram precision is the proportion of words in Y that are also in X
-        print(f"Text ID: {text_id} ...", end=" ")
         scores = rouge.get_scores(outputs[text_id], targets[text_id])
         scores_response[text_id] = scores
-        print("Completed")
 
     if persist:
         # Persistir scores

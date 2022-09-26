@@ -1,5 +1,5 @@
 import argparse
-
+import sys
 import pandas as pd
 import text_preprocessing
 import text_features
@@ -47,21 +47,23 @@ def main():
     if TextRank:
         rouge_scores_data = rouge_script.get_rouge_scores(target='targets', output='text_rank_summaries', persist=True)
 
-        print("Printing ROUGE metrics...")
-        plots.print_rouge_recall(rouge_scores_data, 'Text Rank')
-        plots.print_rouge_precision(rouge_scores_data, 'Text Rank')
-        plots.print_rouge_f1_score(rouge_scores_data, 'Text Rank')
+        # print("Printing ROUGE metrics...")
+        # plots.print_rouge_recall(rouge_scores_data, 'Text Rank')
+        # plots.print_rouge_precision(rouge_scores_data, 'Text Rank')
+        # plots.print_rouge_f1_score(rouge_scores_data, 'Text Rank')
 
     if TextFeatures:
         rouge_scores_data = rouge_script.get_rouge_scores(target='targets', output='tf_dl_summaries', persist=True)
 
-        print("Printing ROUGE metrics...")
-        plots.print_rouge_recall(rouge_scores_data, 'Feature Based')
-        plots.print_rouge_precision(rouge_scores_data, 'Feature Based')
-        plots.print_rouge_f1_score(rouge_scores_data, 'Feature Based')
+        # print("Printing ROUGE metrics...")
+        # plots.print_rouge_recall(rouge_scores_data, 'Feature Based')
+        # plots.print_rouge_precision(rouge_scores_data, 'Feature Based')
+        # plots.print_rouge_f1_score(rouge_scores_data, 'Feature Based')
 
     print("Process finished...")
 
 
 if __name__ == "__main__":
+    sys.setrecursionlimit(2000)
     main()
+

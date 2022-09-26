@@ -109,23 +109,32 @@ def summary(text, features):
 
     jaccard_similarities = {}
 
-    best_sentence = int(improved_features[i][0]) - 1
+    sentences = []
+
+    best_sentence_position = int(improved_features[i][0]) - 1
+    best_sentence_text = text[2][best_sentence_position]
+
+    sentences.append((best_sentence_text, best_sentence_position))
+
     i += 1
     while i < len(improved_features)/2:
         sent_position = int(improved_features[i][0]) - 1
         # text[1][0] = Texto sin stop words - Oracion con mas score
-        jaccard_similarities[sent_position] = _jaccard_similarity(text[1][best_sentence], text[1][sent_position])
+        jaccard_similarities[sent_position] = _jaccard_similarity(text[1][best_sentence_position], text[1][sent_position])
         i += 1
 
-    sorted_similarities = sorted(jaccard_similarities.items(), key=lambda kv:(kv[1], kv[0]), reverse=True)
+    sorted_similarities = sorted(jaccard_similarities.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
 
     for (sentence_position, score) in sorted_similarities:
-        if n < 16:
-            # print(int(sentence_position) - 1)
-            sentence = text[2][int(sentence_position) - 1]
-            # print(sentence)
-            text_summary = text_summary + sentence + "\n"
+        if n < (15-1):
+            sentences.append((text[2][int(sentence_position) - 1], sentence_position))
         n += 1
+
+    sorted_sentences = sorted(sentences, key=lambda kv: kv[1], reverse=False)
+
+    text_summary = ''
+    for (text, position) in sorted_sentences:
+        text_summary = text_summary + text + " "
 
     return text_summary
 
